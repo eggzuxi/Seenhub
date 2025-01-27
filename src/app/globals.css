@@ -1,6 +1,10 @@
+/* google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 :root {
   --background: #ffffff;
@@ -17,5 +21,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Nanum Gothic", Helvetica, sans-serif;
 }
