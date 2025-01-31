@@ -8,7 +8,6 @@ function AddMoviePage() {
         title: "",
         director: "",
         genre: "",
-        comment: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -24,20 +23,6 @@ function AddMoviePage() {
         setError("");
 
         try {
-            let reviewId = null;
-
-            // 리뷰가 입력된 경우에만 리뷰 추가 요청
-            if (formData.comment.trim() !== "") {
-                const reviewResponse = await fetch("/api/review", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ comment: formData.comment }),
-                });
-
-                if (!reviewResponse.ok) throw new Error("리뷰 추가 실패");
-                const reviewData = await reviewResponse.json();
-                reviewId = reviewData._id; // 생성된 리뷰 ID 저장
-            }
 
             // 영화 추가 요청 (리뷰 ID는 있을 때만 포함)
             const movieResponse = await fetch("/api/movie", {
@@ -47,7 +32,6 @@ function AddMoviePage() {
                     title: formData.title,
                     director: formData.director,
                     genre: formData.genre,
-                    reviewId, // 리뷰가 없으면 null이 들어감
                 }),
             });
 
@@ -56,7 +40,7 @@ function AddMoviePage() {
             alert("successfully added movie");
 
             // 폼 초기화
-            setFormData({ title: "", director: "", genre: "", comment: "" });
+            setFormData({ title: "", director: "", genre: "" });
 
             // 자동으로 movie 페이지로 이동
             router.push("/movie");
@@ -102,13 +86,6 @@ function AddMoviePage() {
                     onChange={handleChange}
                     className="w-full p-2 border rounded text-black"
                     required
-                />
-                <textarea
-                    name="comment"
-                    placeholder="review"
-                    value={formData.comment}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
                 />
                 <button
                     type="submit"

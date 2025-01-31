@@ -8,7 +8,6 @@ function AddBookPage() {
         title: "",
         author: "",
         genre: "",
-        comment: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -24,20 +23,6 @@ function AddBookPage() {
         setError("");
 
         try {
-            let reviewId = null;
-
-            // 리뷰가 입력된 경우에만 리뷰 추가 요청
-            if (formData.comment.trim() !== "") {
-                const reviewResponse = await fetch("/api/review", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ comment: formData.comment }),
-                });
-
-                if (!reviewResponse.ok) throw new Error("리뷰 추가 실패");
-                const reviewData = await reviewResponse.json();
-                reviewId = reviewData._id; // 생성된 리뷰 ID 저장
-            }
 
             // 도서 추가 요청 (리뷰 ID는 있을 때만 포함)
             const bookResponse = await fetch("/api/book", {
@@ -47,7 +32,6 @@ function AddBookPage() {
                     title: formData.title,
                     author: formData.author,
                     genre: formData.genre,
-                    reviewId, // 리뷰가 없으면 null이 들어감
                 }),
             });
 
@@ -56,7 +40,7 @@ function AddBookPage() {
             alert("successfully added book");
 
             // 폼 초기화
-            setFormData({ title: "", author: "", genre: "", comment: "" });
+            setFormData({ title: "", author: "", genre: "" });
 
             // 자동으로 book 페이지로 이동
             router.push("/book");
@@ -102,13 +86,6 @@ function AddBookPage() {
                     onChange={handleChange}
                     className="w-full p-2 border rounded text-black"
                     required
-                />
-                <textarea
-                    name="comment"
-                    placeholder="review"
-                    value={formData.comment}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
                 />
                 <button
                     type="submit"
