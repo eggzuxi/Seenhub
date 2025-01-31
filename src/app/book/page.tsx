@@ -1,8 +1,7 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {Book} from "../../../types/book";
+import { Book } from "../../../types/book";
 
 function Page() {
     const [bookList, setBookList] = useState<Book[]>([]);
@@ -32,31 +31,22 @@ function Page() {
     return (
         <div className="container p-10">
             <Link href="/book/add">
-                <button className="pb-5">ADD</button>
+                <button className="mb-5 bg-gray-500 text-white font-bold px-4 py-2 rounded">ADD</button>
             </Link>
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
-                <table className="w-full border-collapse border border-gray-300 mt-4">
-                    <thead>
-                    <tr className="bg-gray-500">
-                        <th className="border border-gray-300 p-2">No.</th>
-                        <th className="border border-gray-300 p-2">Title</th>
-                        <th className="border border-gray-300 p-2">Author</th>
-                        <th className="border border-gray-300 p-2">Genre</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <ul className="space-y-4">
                     {bookList.map((book, index) => (
-                        <tr key={index} className="text-center">
-                            <td className="border border-gray-300 p-2">{index + 1}</td>
-                            <td className="border border-gray-300 p-2">{book.title}</td>
-                            <td className="border border-gray-300 p-2">{book.author}</td>
-                            <td className="border border-gray-300 p-2">{book.genre}</td>
-                        </tr>
+                        <li key={index} className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
+                            <div>
+                                <p className="font-bold">{book.title}</p>
+                                <p className="text-gray-600">{book.author} - {book.genre}</p>
+                            </div>
+                            <button className="text-gray-500 hover:text-gray-200 font-bold text-xl">⋮</button> {/* 삭제 기능은 나중에 추가 */}
+                        </li>
                     ))}
-                    </tbody>
-                </table>
+                </ul>
             )}
         </div>
     );

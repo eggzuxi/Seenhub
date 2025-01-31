@@ -30,11 +30,11 @@ export default function RootLayout({
       >
         <header>
             <div className="container p-10">
-                <Link href="/" className="text-center text-3xl">SEENHUB</Link>
+                <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
             </div>
             <div className="container p-10">
                 <ol>
-                    <li className="flex space-x-6">
+                    <li className="flex space-x-6 font-bold">
                         <Link href="/music">MUSIC</Link>
                         <Link href="/movie">MOVIE</Link>
                         <Link href="/book">BOOK</Link>
