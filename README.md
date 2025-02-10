@@ -5,6 +5,10 @@ This is my little corner of the internet where I can record all the amazing musi
 
 Oh, and just a heads up – SeenHub is still in its baby stage, so there isn’t much here yet.🙂
 
+좋아하는 음악, 영화, 도서 등을 저장하는 공간입니다 <br/>
+우연히, 별 생각없이 좋은 작품들을 발견했을 때 강한 쾌감을 느낍니다..🤪 <br/>
+배포할 계획 있음
+
 ### Getting Started
 
 First, run the development server:
