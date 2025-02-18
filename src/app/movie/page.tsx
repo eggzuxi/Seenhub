@@ -3,11 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {Movie} from "../../../types/movie";
+import Pagination from "@/components/common/Pagination";
 
 function Page() {
     const [movieList, setMovieList] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const itemsPerPage = 5;
 
     const [isOpen, setIsOpen] = useState(false);
     const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
@@ -34,6 +38,12 @@ function Page() {
         };
         fetchMovie();
     }, []);
+
+    const totalPages = Math.ceil(movieList.length / itemsPerPage);
+    const displayedMovie = movieList.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const openModal = (event: React.MouseEvent, movieId: string) => {
         setIsOpen(true);
@@ -98,30 +108,33 @@ function Page() {
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
-                <ul className="space-y-4">
-                    {movieList.map((movie, index) => (
-                        <li key={index}
-                            className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
-                            <div>
-                                <p className="font-bold">{movie.title}</p>
-                                <p className="text-gray-600">{movie.director} - {movie.genre}</p>
-                            </div>
-                            <button
-                                className="text-gray-500 hover:text-gray-200 font-bold text-xl"
-                                onClick={(event) => openModal(event, movie._id)}
-                            >
-                                ⋮
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                <>
+                    <ul className="space-y-4">
+                        {displayedMovie.map((movie, index) => (
+                            <li key={index}
+                                className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
+                                <div>
+                                    <p className="font-bold">{movie.title}</p>
+                                    <p className="text-gray-600">{movie.director} - {movie.genre}</p>
+                                </div>
+                                <button
+                                    className="text-gray-500 hover:text-gray-200 font-bold text-xl"
+                                    onClick={(event) => openModal(event, movie._id)}
+                                >
+                                    ⋮
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+                </>
             )}
 
             {isOpen && (
                 <div
                     ref={modalRef}
                     className="absolute bg-black shadow-lg border border-gray-200 rounded-lg p-2 w-40"
-                    style={{ top: modalPosition.y, left: modalPosition.x }}
+                    style={{top: modalPosition.y, left: modalPosition.x}}
                 >
                     <button className="block w-full text-left p-2" onClick={closeModal}>
                         수정
