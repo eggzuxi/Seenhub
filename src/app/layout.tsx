@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Avatar from "boring-avatars";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header>
-            <div className="container p-10">
+            <div className="container flex justify-between p-10">
                 <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
+                <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40} />
             </div>
-            <div className="container p-10">
+            <div className="container pl-10">
                 <ol>
                     <li className="flex space-x-6 font-bold">
                         <Link href="/music">MUSIC</Link>

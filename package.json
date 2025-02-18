@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "boring-avatars": "^1.11.2",
     "mongoose": "^8.9.5",
+    "motion": "^12.4.3",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
