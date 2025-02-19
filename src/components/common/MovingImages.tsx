@@ -61,7 +61,7 @@ const MovingImages = () => {
     }, []);
 
     return (
-        <div className="absolute inset-0 z-10">
+        <div className="relative inset-0 z-10">
             {images.map((item, index) => (
                 <motion.img
                     key={item.id}
