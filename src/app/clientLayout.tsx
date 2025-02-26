@@ -3,10 +3,10 @@
 import Link from "next/link";
 import Avatar from "boring-avatars";
 import {useEffect, useRef, useState} from "react";
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-    const { user } = useAuth();
+    // const { user } = useAuth();
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -14,9 +14,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         setShowModal(true);
     }
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    }
+    // const handleCloseModal = () => {
+    //     setShowModal(false);
+    // }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -34,18 +34,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         };
     }, [showModal]);
 
-    const handleLogout = async () => {
-        try {
-            const res = await fetch("/api/user", { method: "DELETE" });
-            if (!res.ok) {
-                throw new Error("Logout failed");
-            }
-            window.location.reload(); // 로그아웃 후 페이지 새로고침
-        } catch (error) {
-            console.error("Logout error:", error);
-            alert("Logout failed. Please try again.");
-        }
-    };
+    // const handleLogout = async () => {
+    //     try {
+    //         const res = await fetch("/api/user", { method: "DELETE" });
+    //         if (!res.ok) {
+    //             throw new Error("Logout failed");
+    //         }
+    //         window.location.reload(); // 로그아웃 후 페이지 새로고침
+    //     } catch (error) {
+    //         console.error("Logout error:", error);
+    //         alert("Logout failed. Please try again.");
+    //     }
+    // };
 
     return (
         <>
