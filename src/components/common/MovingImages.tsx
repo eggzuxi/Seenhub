@@ -12,8 +12,8 @@ const imageSize = 300; // 원하는 크기로 변경 가능
 const MovingImages = () => {
     const [positions, setPositions] = useState(
         images.map(() => ({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: typeof window !== "undefined" ? Math.random() * window.innerWidth : 0,
+            y: typeof window !== "undefined" ? Math.random() * window.innerHeight : 0,
             angle: Math.random() * Math.PI * 2,
             speed: 0.5 + Math.random() * 1.5,
             directionX: Math.random() > 0.5 ? 1 : -1,
@@ -33,11 +33,11 @@ const MovingImages = () => {
                     let newDirectionY = pos.directionY;
 
                     // 화면 경계 체크 (벗어나면 반대 방향으로 이동)
-                    if (newX < 0 || newX > window.innerWidth - imageSize) {
+                    if (typeof window !== "undefined" && (newX < 0 || newX > window.innerWidth - imageSize)) {
                         newDirectionX *= -1;
                         newX = Math.max(0, Math.min(newX, window.innerWidth - imageSize));
                     }
-                    if (newY < 0 || newY > window.innerHeight - imageSize) {
+                    if (typeof window !== "undefined" && (newY < 0 || newY > window.innerHeight - imageSize)) {
                         newDirectionY *= -1;
                         newY = Math.max(0, Math.min(newY, window.innerHeight - imageSize));
                     }
