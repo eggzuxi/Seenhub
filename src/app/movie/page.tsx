@@ -4,8 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {Movie} from "../../../types/movie";
 import Pagination from "@/components/common/Pagination";
+import useAuth from "../../../hooks/useAuth";
 
 function Page() {
+    const { user, loading: authLoading } = useAuth();
     const [movieList, setMovieList] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -102,9 +104,13 @@ function Page() {
 
     return (
         <div className="container p-10">
-            <Link href="/movie/add">
-                <button className="mb-5 bg-gray-500 text-white font-bold px-4 py-2 rounded">ADD</button>
-            </Link>
+            {!authLoading && user && (
+                <Link href="/movie/add">
+                    <button className="mb-5 bg-gray-500 text-white font-bold px-4 py-2 rounded">
+                        ADD
+                    </button>
+                </Link>
+            )}
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
@@ -117,16 +123,18 @@ function Page() {
                                     <p className="font-bold">{movie.title}</p>
                                     <p className="text-gray-600">{movie.director} - {movie.genre}</p>
                                 </div>
-                                <button
-                                    className="text-gray-500 hover:text-gray-200 font-bold text-xl"
-                                    onClick={(event) => openModal(event, movie._id)}
-                                >
-                                    ⋮
-                                </button>
+                                {!authLoading && user && (
+                                    <button
+                                        className="text-gray-500 hover:text-gray-200 font-bold text-xl"
+                                        onClick={(event) => openModal(event, movie._id)}
+                                    >
+                                        ⋮
+                                    </button>
+                                )}
                             </li>
                         ))}
                     </ul>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
                 </>
             )}
 
