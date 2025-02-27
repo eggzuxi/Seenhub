@@ -25,7 +25,7 @@ export async function GET() {
     try {
         await connectDB();
 
-        const books = await Book.find({ delflag: false }); // 모든 책 조회
+        const books = await Book.find({ delflag: false }).sort({ createdAt: -1 });
         return NextResponse.json(books);
     } catch (error: unknown) {
         if (error instanceof Error) {

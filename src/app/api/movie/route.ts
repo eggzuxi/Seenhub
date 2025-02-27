@@ -25,7 +25,7 @@ export async function GET() {
     try {
         await connectDB();
 
-        const movies = await Movie.find({ delflag: false }); // 모든 영화 조회
+        const movies = await Movie.find({ delflag: false }).sort({ createdAt: -1 });
         return NextResponse.json(movies);
     } catch (error: unknown) {
         if (error instanceof Error) {
