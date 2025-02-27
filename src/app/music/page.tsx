@@ -121,7 +121,7 @@ function Page() {
                                 className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
                                 <div>
                                     <p className="font-bold">{music.title}</p>
-                                    <p className="text-gray-600">{music.artist} - {music.genre}</p>
+                                    <p className="text-gray-600">{music.artist}</p>
                                 </div>
                                 {!authLoading && user && (
                                     <button

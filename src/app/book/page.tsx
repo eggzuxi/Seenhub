@@ -121,7 +121,7 @@ function Page() {
                                 className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
                                 <div>
                                     <p className="font-bold">{book.title}</p>
-                                    <p className="text-gray-600">{book.author} - {book.genre}</p>
+                                    <p className="text-gray-600">{book.author}</p>
                                 </div>
                                 {!authLoading && user && (
                                     <button
