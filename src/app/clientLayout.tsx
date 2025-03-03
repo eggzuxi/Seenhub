@@ -3,10 +3,10 @@
 import Link from "next/link";
 import Avatar from "boring-avatars";
 import {useEffect, useRef, useState} from "react";
-// import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-    // const { user } = useAuth();
+    const { user } = useAuth();
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -14,9 +14,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         setShowModal(true);
     }
 
-    // const handleCloseModal = () => {
-    //     setShowModal(false);
-    // }
+    const handleCloseModal = () => {
+        setShowModal(false);
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -34,18 +34,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         };
     }, [showModal]);
 
-    // const handleLogout = async () => {
-    //     try {
-    //         const res = await fetch("/api/user", { method: "DELETE" });
-    //         if (!res.ok) {
-    //             throw new Error("Logout failed");
-    //         }
-    //         window.location.reload(); // 로그아웃 후 페이지 새로고침
-    //     } catch (error) {
-    //         console.error("Logout error:", error);
-    //         alert("Logout failed. Please try again.");
-    //     }
-    // };
+    const handleLogout = async () => {
+        try {
+            const res = await fetch("/api/user", { method: "DELETE" });
+            if (!res.ok) {
+                throw new Error("Logout failed");
+            }
+            window.location.reload(); // 로그아웃 후 페이지 새로고침
+        } catch (error) {
+            console.error("Logout error:", error);
+            alert("Logout failed. Please try again.");
+        }
+    };
 
     return (
         <>
@@ -72,36 +72,36 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             <footer className="container p-10">seenhub v.0.1</footer>
 
-            {/*{showModal && (*/}
-            {/*    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">*/}
-            {/*        <div className="bg-gray-500 p-6 rounded-md" ref={modalRef}>*/}
-            {/*            <h2 className="text-lg font-bold mb-4">Welcome!</h2>*/}
-            {/*            <div className="flex justify-center space-x-4">*/}
-            {/*                {user ? ( // user 상태에 따라 버튼 변경*/}
-            {/*                    <button*/}
-            {/*                        onClick={handleLogout}*/}
-            {/*                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"*/}
-            {/*                    >*/}
-            {/*                        Logout*/}
-            {/*                    </button>*/}
-            {/*                ) : (*/}
-            {/*                    <>*/}
-            {/*                        <Link href="/join" onClick={handleCloseModal}>*/}
-            {/*                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">*/}
-            {/*                                Sign Up*/}
-            {/*                            </button>*/}
-            {/*                        </Link>*/}
-            {/*                        <Link href="/login" onClick={handleCloseModal}>*/}
-            {/*                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">*/}
-            {/*                                Login*/}
-            {/*                            </button>*/}
-            {/*                        </Link>*/}
-            {/*                    </>*/}
-            {/*                )}*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*)}*/}
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-gray-500 p-6 rounded-md" ref={modalRef}>
+                        <h2 className="text-lg font-bold mb-4">Welcome!</h2>
+                        <div className="flex justify-center space-x-4">
+                            {user ? ( // user 상태에 따라 버튼 변경
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                >
+                                    Logout
+                                </button>
+                            ) : (
+                                <>
+                                    {/*<Link href="/join" onClick={handleCloseModal}>*/}
+                                    {/*    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">*/}
+                                    {/*        Sign Up*/}
+                                    {/*    </button>*/}
+                                    {/*</Link>*/}
+                                    <Link href="/login" onClick={handleCloseModal}>
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                            Login
+                                        </button>
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 
