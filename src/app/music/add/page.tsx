@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const genres = ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul"];
+
 function AddMusicPage() {
     const [formData, setFormData] = useState({
         title: "",
         artist: "",
-        genre: "",
+        genre: [] as string[],
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -15,6 +17,14 @@ function AddMusicPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            genre: checked ? [...prev.genre, value] : prev.genre.filter((g) => g !== value),
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +50,7 @@ function AddMusicPage() {
             alert("successfully added music");
 
             // 폼 초기화
-            setFormData({ title: "", artist: "", genre: "" });
+            setFormData({ title: "", artist: "", genre: [] });
 
             // 자동으로 music 페이지로 이동
             router.push("/music");
@@ -78,15 +88,20 @@ function AddMusicPage() {
                     className="w-full p-2 border rounded text-black"
                     required
                 />
-                <input
-                    type="text"
-                    name="genre"
-                    placeholder="genre"
-                    value={formData.genre}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
-                    required
-                />
+                <div className="flex flex-wrap gap-2">
+                    {genres.map((genre) => (
+                        <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                value={genre}
+                                checked={formData.genre.includes(genre)}
+                                onChange={handleGenreChange}
+                                className="w-4 h-4 border border-gray-400 rounded-sm bg-transparent accent-white"
+                            />
+                            <span>{genre}</span>
+                        </label>
+                    ))}
+                </div>
                 <button
                     type="submit"
                     className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500"

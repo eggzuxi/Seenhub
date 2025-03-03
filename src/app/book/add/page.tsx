@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const genres = ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"]
+
 function AddBookPage() {
     const [formData, setFormData] = useState({
         title: "",
         author: "",
-        genre: "",
+        genre: [] as string[],
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -15,6 +17,14 @@ function AddBookPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            genre: checked ? [...prev.genre, value] : prev.genre.filter((g) => g !== value),
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +50,7 @@ function AddBookPage() {
             alert("successfully added book");
 
             // 폼 초기화
-            setFormData({ title: "", author: "", genre: "" });
+            setFormData({ title: "", author: "", genre: [] });
 
             // 자동으로 book 페이지로 이동
             router.push("/book");
@@ -78,15 +88,20 @@ function AddBookPage() {
                     className="w-full p-2 border rounded text-black"
                     required
                 />
-                <input
-                    type="text"
-                    name="genre"
-                    placeholder="genre"
-                    value={formData.genre}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
-                    required
-                />
+                <div className="flex flex-wrap gap-2">
+                    {genres.map((genre) => (
+                        <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                value={genre}
+                                checked={formData.genre.includes(genre)}
+                                onChange={handleGenreChange}
+                                className="w-4 h-4 border border-gray-400 rounded-sm bg-transparent accent-white"
+                            />
+                            <span>{genre}</span>
+                        </label>
+                    ))}
+                </div>
                 <button
                     type="submit"
                     className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
