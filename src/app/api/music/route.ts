@@ -8,7 +8,9 @@ export async function POST(req: Request) {
         const { title, artist, genre } = await req.json();
         await connectDB();
 
-        const newMusic = new Music({ title, artist, genre });
+        const genreArray = Array.isArray(genre) ? genre : [genre];
+
+        const newMusic = new Music({ title, artist, genre: genreArray });
         await newMusic.save();
 
         return NextResponse.json(newMusic);

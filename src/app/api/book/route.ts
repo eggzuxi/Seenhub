@@ -8,7 +8,9 @@ export async function POST(req: Request) {
         const { title, author, genre } = await req.json();
         await connectDB();
 
-        const newBook = new Book({ title, author, genre });
+        const genreArray = Array.isArray(genre) ? genre : [genre];
+
+        const newBook = new Book({ title, author, genre: genreArray });
         await newBook.save();
 
         return NextResponse.json(newBook);

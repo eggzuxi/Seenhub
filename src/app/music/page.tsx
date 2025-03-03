@@ -74,7 +74,7 @@ function Page() {
             if (!response.ok) throw new Error("Failed to delete music");
 
             alert("Music successfully deleted");
-            // 삭제된 책을 목록에서 제거
+            // 삭제된 음악을 목록에서 제거
             setMusicList((prevMusic) => prevMusic.filter((music) => music._id !== selectedMusicId));
             closeModal();
         } catch (error) {

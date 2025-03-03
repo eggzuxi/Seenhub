@@ -8,7 +8,9 @@ export async function POST(req: Request) {
         const { title, director, genre } = await req.json();
         await connectDB();
 
-        const newMovie = new Movie({ title, director, genre });
+        const genreArray = Array.isArray(genre) ? genre : [genre];
+
+        const newMovie = new Movie({ title, director, genre: genreArray });
         await newMovie.save();
 
         return NextResponse.json(newMovie);
