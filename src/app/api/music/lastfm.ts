@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_KEY = process.env.NEXT_PUBLIC_LASTFM_API_KEY as string;
-const BASE_URL = 'http://ws.audioscrobbler.com/2.0/';
+const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
 export const fetchLastfmData = async (method: string, params: { mbid:string; [key: string]: any }) => {
     try {
