@@ -5,7 +5,7 @@ This is my little corner of the internet where I can record all the amazing musi
 우연히, 별 생각없이 좋은 작품들을 발견했을 때 강한 쾌감을 느낍니다 <br/>
 
 #### And More...
-1 앨범 아트 크롤링<br />
+1 앨범 아트 크롤링 ✔️<br />
 2 분야별 장르 분석화면 개발<br />
 3 무한스크롤<br />
 4 드라마 & 애니메이션 페이지 추가
