@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const MusicSchema = new mongoose.Schema({
+    mbid: { type: String, required: true },
     title: { type: String, required: true },
     artist: { type: String, required: true },
     genre: { type: [String], required: true,
