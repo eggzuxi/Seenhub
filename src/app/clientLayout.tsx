@@ -26,11 +26,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         };
 
         if (showModal) {
-            document.addEventListener("mousedown", handleClickOutside);
+            if (typeof window !== 'undefined') { // 클라이언트 측에서만 실행
+                document.addEventListener("mousedown", handleClickOutside);
+            }
         }
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            if (typeof window !== 'undefined') { // 클라이언트 측에서만 실행
+                document.removeEventListener("mousedown", handleClickOutside);
+            }
         };
     }, [showModal]);
 
@@ -51,7 +55,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <>
             <header>
                 <div className="container flex justify-between p-10">
-                    <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
+                    <Link href="/" className={`dunggeunmiso-font text-center text-3xl font-bold`}>SEENHUB</Link>
                     <div onClick={handleAvatarClick} style={{cursor: 'pointer'}}>
                         <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40}/>
                     </div>
@@ -60,9 +64,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <div className="container pl-10">
                     <ol>
                         <li className="flex space-x-6 font-bold">
-                            <Link href="/music">MUSIC</Link>
-                            <Link href="/movie">MOVIE</Link>
-                            <Link href="/book">BOOK</Link>
+                            <Link href="/music" className={`dunggeunmiso-font`}>MUSIC</Link>
+                            <Link href="/movie" className={`dunggeunmiso-font`}>MOVIE</Link>
+                            <Link href="/book" className={`dunggeunmiso-font`}>BOOK</Link>
                         </li>
                     </ol>
                 </div>
