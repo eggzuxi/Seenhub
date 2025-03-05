@@ -1,14 +1,7 @@
-/* google fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
-
-.dunggeunmiso-font {
-  font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
-}
-
 @font-face {
-  font-family: 'HakgyoansimDunggeunmisoTTF-B';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2') format('woff2');
-  font-weight: 700;
+  font-family: 'MonoplexKR-Italic';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Italic.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -24,5 +17,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Nanum Gothic", Helvetica, sans-serif;
+  font-family: "MonoplexKR-Italic", Helvetica, sans-serif;
 }
