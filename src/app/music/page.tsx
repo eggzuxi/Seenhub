@@ -5,6 +5,7 @@ import Link from "next/link";
 import {Music} from "../../../types/music";
 import Pagination from "@/components/common/Pagination";
 import useAuth from "../../../hooks/useAuth";
+import AlbumArt from "@/components/AlbumArt";
 
 function Page() {
     const { user, loading: authLoading } = useAuth();
@@ -118,9 +119,12 @@ function Page() {
                     <ul className="space-y-4">
                         {displayedMusic.map((music, index) => (
                             <li key={index}
-                                className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
+                                className="flex justify-items-start items-center p-4 border border-gray-300 rounded-lg shadow-sm">
+                                <div className="pr-6">
+                                    <AlbumArt mbid={music.mbid}/>
+                                </div>
                                 <div>
-                                    <p className="font-bold">{music.title}</p>
+                                <p className="font-bold">{music.title}</p>
                                     <p className="text-gray-600">{music.artist}</p>
                                 </div>
                                 {!authLoading && user && (
