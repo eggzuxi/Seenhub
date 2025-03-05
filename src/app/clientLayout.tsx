@@ -74,7 +74,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             <main>{children}</main>
 
-            <footer className="container p-10">seenhub v.0.1</footer>
+            <footer className="container p-10 text-center text-sm text-gray-600">
+                <p>seenhub v.0.1</p>
+                <p>
+                    Album data & images provided by{" "}
+                    <a
+                        href="https://www.last.fm/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                    >
+                        Last.fm
+                    </a>
+                </p>
+            </footer>
 
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -96,7 +109,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                                     {/*    </button>*/}
                                     {/*</Link>*/}
                                     <Link href="/login" onClick={handleCloseModal}>
-                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                             Login
                                         </button>
                                     </Link>
