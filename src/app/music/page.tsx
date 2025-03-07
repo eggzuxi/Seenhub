@@ -127,14 +127,16 @@ function Page() {
                                 <p className="font-bold">{music.title}</p>
                                     <p className="text-gray-600">{music.artist}</p>
                                 </div>
-                                {!authLoading && user && (
-                                    <button
-                                        className="text-gray-500 hover:text-gray-200 font-bold text-xl"
-                                        onClick={(event) => openModal(event, music._id)}
-                                    >
-                                        ⋮
-                                    </button>
-                                )}
+                                <div className="ml-auto">
+                                    {!authLoading && user && (
+                                        <button
+                                            className="text-gray-500 hover:text-gray-200 font-bold text-xl"
+                                            onClick={(event) => openModal(event, music._id)}
+                                        >
+                                            ⋮
+                                        </button>
+                                    )}
+                                </div>
                             </li>
                         ))}
                     </ul>

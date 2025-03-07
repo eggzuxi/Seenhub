@@ -7,6 +7,7 @@ const genres = ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "D
 
 function AddMusicPage() {
     const [formData, setFormData] = useState({
+        mbid: "",
         title: "",
         artist: "",
         genre: [] as string[],
@@ -39,6 +40,7 @@ function AddMusicPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    mbid: formData.mbid,
                     title: formData.title,
                     artist: formData.artist,
                     genre: formData.genre,
@@ -50,7 +52,7 @@ function AddMusicPage() {
             alert("successfully added music");
 
             // 폼 초기화
-            setFormData({ title: "", artist: "", genre: [] });
+            setFormData({ mbid: "", title: "", artist: "", genre: [] });
 
             // 자동으로 music 페이지로 이동
             router.push("/music");
@@ -70,6 +72,14 @@ function AddMusicPage() {
             <h1 className="text-2xl font-bold mb-4">Add music</h1>
             {error && <p className="text-red-500">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                    type="text"
+                    name="mbid"
+                    placeholder="mbid"
+                    value={formData.mbid}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded text-black"
+                />
                 <input
                     type="text"
                     name="title"

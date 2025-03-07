@@ -46,7 +46,7 @@ const AlbumArt: React.FC<Props> = ({ mbid }) => {
             <img
                 src={albumArt}
                 alt="Album Art"
-                style={{ width: "64px", height: "64px", objectFit: "cover" }}
+                style={{ width: "50px", height: "50px", objectFit: "cover" }}
             />
         </div>
     );
