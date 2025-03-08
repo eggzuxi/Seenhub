@@ -7,8 +7,13 @@ import useAuth from "../../hooks/useAuth";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const { user } = useAuth();
+    const [activeLink, setActiveLink] = useState<string | null>(null);
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
+
+    const handleClick = (link: string) => {
+        setActiveLink(link);
+    };
 
     const handleAvatarClick = () => {
         setShowModal(true);
@@ -55,7 +60,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <>
             <header>
                 <div className="container flex justify-between p-10">
-                    <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
+                    <Link href="/" className="text-center text-3xl font-bold" style={{ textShadow: '8px 6px 2px gray' }}>SEENHUB</Link>
                     <div onClick={handleAvatarClick} style={{cursor: 'pointer'}}>
                         <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40}/>
                     </div>
@@ -64,9 +69,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <div className="container pl-10">
                     <ol>
                         <li className="flex space-x-6 font-bold">
-                            <Link href="/music">MUSIC</Link>
-                            <Link href="/movie">MOVIE</Link>
-                            <Link href="/book">BOOK</Link>
+                            <Link href="/music" onClick={() => handleClick('/music')}
+                                  style={{ textShadow: activeLink === '/music' ? '4px 4px 2px gray' : 'none' }}>MUSIC</Link>
+                            <Link href="/movie" onClick={() => handleClick('/movie')}
+                                  style={{ textShadow: activeLink === '/movie' ? '4px 4px 2px gray' : 'none' }}>MOVIE</Link>
+                            <Link href="/book" onClick={() => handleClick('/book')}
+                                  style={{ textShadow: activeLink === '/book' ? '4px 4px 2px gray' : 'none' }}>BOOK</Link>
                         </li>
                     </ol>
                 </div>
@@ -91,8 +99,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-500 p-6 rounded-md" ref={modalRef}>
-                        <h2 className="text-lg font-bold mb-4">Welcome!</h2>
+                    <div className="bg-gray-500 p-6 rounded-md w-60" ref={modalRef}>
+                        <h2 className="text-center text-lg font-bold mb-4">Welcome!</h2>
                         <div className="flex justify-center space-x-4">
                             {user ? ( // user 상태에 따라 버튼 변경
                                 <button
