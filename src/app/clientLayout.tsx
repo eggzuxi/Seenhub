@@ -75,6 +75,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                                   style={{ textShadow: activeLink === '/movie' ? '4px 4px 2px gray' : 'none' }}>MOVIE</Link>
                             <Link href="/book" onClick={() => handleClick('/book')}
                                   style={{ textShadow: activeLink === '/book' ? '4px 4px 2px gray' : 'none' }}>BOOK</Link>
+                            <Link href="/series" onClick={() => handleClick('/series')}
+                                  style={{ textShadow: activeLink === '/series' ? '4px 4px 2px gray' : 'none' }}>SERIES</Link>
                         </li>
                     </ol>
                 </div>
