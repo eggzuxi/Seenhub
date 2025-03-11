@@ -60,7 +60,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <>
             <header>
                 <div className="container flex justify-between p-10">
-                    <Link href="/" className="text-center text-3xl font-bold" style={{ textShadow: '8px 6px 2px gray' }}>SEENHUB</Link>
+                    <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
                     <div onClick={handleAvatarClick} style={{cursor: 'pointer'}}>
                         <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40}/>
                     </div>
