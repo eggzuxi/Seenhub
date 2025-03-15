@@ -118,10 +118,19 @@ function Page() {
                     <ul className="space-y-4">
                         {displayedMovie.map((movie, index) => (
                             <li key={index}
-                                className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
-                                <div>
-                                    <p className="font-bold">{movie.title}</p>
-                                    <p className="text-gray-600">{movie.director}</p>
+                                className="flex justify-between items-start p-4 border border-gray-300 rounded-lg shadow-sm">
+                                <div className="flex items-start space-x-4">
+                                    {movie.posterPath && (
+                                        <img
+                                            src={`https://image.tmdb.org/t/p/w92${movie.posterPath}`}
+                                            alt={`${movie.title} poster`}
+                                            className="w-14 h-auto rounded"
+                                        />
+                                    )}
+                                    <div>
+                                        <p className="font-bold">{movie.title}</p>
+                                        <p className="text-gray-600">{movie.director}</p>
+                                    </div>
                                 </div>
                                 {!authLoading && user && (
                                     <button
@@ -148,7 +157,7 @@ function Page() {
                         수정
                     </button>
                     <button className="block w-full text-left p-2 text-red-500" onClick={handleDelete}>
-                        삭제
+                    삭제
                     </button>
                 </div>
             )}
