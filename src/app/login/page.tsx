@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "../../../hooks/useAuth";
+import Spinner from "@/components/common/Spinner";
 
 export default function LoginPage() {
     const { loading } = useAuth();
@@ -42,7 +43,9 @@ export default function LoginPage() {
     return (
         <div className="flex h-screen">
             {loading ? (
-                <p>Loading...</p>
+                <div className="flex justify-center items-center w-full h-40">
+                    <Spinner size={50} color="#3498db"/>
+                </div>
             ) : (
                 <form className="w-full max-w-md p-10 shadow-md rounded-lg" onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-4">Login</h2>
