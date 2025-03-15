@@ -66,13 +66,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <ol>
                         <li className="flex space-x-6 font-bold">
                             <Link href="/music" onClick={() => handleClick('/music')}
-                                  style={{ textShadow: activeLink === '/music' ? '4px 4px 2px gray' : 'none' }}>MUSIC</Link>
+                                  style={{textShadow: activeLink === '/music' ? '4px 4px 2px gray' : 'none'}}>MUSIC</Link>
                             <Link href="/movie" onClick={() => handleClick('/movie')}
-                                  style={{ textShadow: activeLink === '/movie' ? '4px 4px 2px gray' : 'none' }}>MOVIE</Link>
+                                  style={{textShadow: activeLink === '/movie' ? '4px 4px 2px gray' : 'none'}}>MOVIE</Link>
                             <Link href="/book" onClick={() => handleClick('/book')}
-                                  style={{ textShadow: activeLink === '/book' ? '4px 4px 2px gray' : 'none' }}>BOOK</Link>
+                                  style={{textShadow: activeLink === '/book' ? '4px 4px 2px gray' : 'none'}}>BOOK</Link>
                             <Link href="/series" onClick={() => handleClick('/series')}
-                                  style={{ textShadow: activeLink === '/series' ? '4px 4px 2px gray' : 'none' }}>SERIES</Link>
+                                  style={{textShadow: activeLink === '/series' ? '4px 4px 2px gray' : 'none'}}>SERIES</Link>
                         </li>
                     </ol>
                 </div>
@@ -92,6 +92,27 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     >
                         Last.fm
                     </a>
+                </p>
+                <p className="mt-2">
+                    This product uses the TMDB API but is not endorsed or certified by TMDB.
+                </p>
+                <p>
+                    Movie data & images provided by{" "}
+                    <a
+                        href="https://www.themoviedb.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                    >
+                        TMDB
+                    </a>
+                </p>
+                <p className="mt-4">
+                    <img
+                        src="/tmdb.svg" // TMDB 로고 경로
+                        alt="TMDB Logo"
+                        className="inline-block h-6 mx-1" // 로고 스타일 조정
+                    />
                 </p>
             </footer>
 
