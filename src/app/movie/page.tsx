@@ -5,6 +5,7 @@ import Link from "next/link";
 import {Movie} from "../../../types/movie";
 import Pagination from "@/components/common/Pagination";
 import useAuth from "../../../hooks/useAuth";
+import Spinner from "@/components/common/Spinner";
 
 function Page() {
     const { user, loading: authLoading } = useAuth();
@@ -111,7 +112,11 @@ function Page() {
                     </button>
                 </Link>
             )}
-            {loading && <p>Loading...</p>}
+            {loading && (
+                <div className="flex justify-center items-center h-40">
+                    <Spinner size={50} color="#3498db" />
+                </div>
+            )}
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
                 <>
