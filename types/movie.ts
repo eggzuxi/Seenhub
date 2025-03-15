@@ -3,4 +3,5 @@ export type Movie = {
     title: string;
     director: string;
     genre: string;
+    posterPath: string;
 };

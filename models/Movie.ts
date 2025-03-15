@@ -6,6 +6,7 @@ const MovieSchema = new mongoose.Schema({
     genre: { type: [String], required: true,
         enum: ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"]
     },
+    posterPath: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });
