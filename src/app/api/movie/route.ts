@@ -1,6 +1,7 @@
-import {connectDB} from "../../../../lib/mongodb";
-import {Movie} from "../../../../models/Movie";
-import {NextResponse} from "next/server";
+import { connectDB } from "../../../../lib/mongodb";
+import { Movie } from "../../../../models/Movie";
+import { NextResponse } from "next/server";
+import { searchMovie } from "@/app/api/movie/tmdb";
 
 // 추가
 export async function POST(req: Request) {
@@ -10,10 +11,21 @@ export async function POST(req: Request) {
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
 
-        const newMovie = new Movie({ title, director, genre: genreArray });
-        await newMovie.save();
-
-        return NextResponse.json(newMovie);
+        // TMDB에서 영화 검색 후 Movie 모델에 저장
+        const tmdbMovies = await searchMovie(title);
+        if (tmdbMovies && tmdbMovies.length > 0) {
+            const tmdbMovie = tmdbMovies[0]; // 첫 번째 결과 사용 (필요에 따라 수정)
+            const newMovie = new Movie({
+                title: tmdbMovie.title,
+                director,
+                genre: genreArray,
+                posterPath: tmdbMovie.poster_path, // posterPath 추가
+            });
+            await newMovie.save();
+            return NextResponse.json(newMovie);
+        } else {
+            return NextResponse.json({ error: "TMDB에서 영화를 찾을 수 없습니다." }, { status: 404 });
+        }
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
