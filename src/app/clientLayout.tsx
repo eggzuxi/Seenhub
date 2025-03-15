@@ -80,40 +80,55 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             <main>{children}</main>
 
-            <footer className="container p-10 text-center text-sm text-gray-600">
-                <p>seenhub v.0.1</p>
-                <p>
-                    Album data & images provided by{" "}
-                    <a
-                        href="https://www.last.fm/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                    >
-                        Last.fm
-                    </a>
-                </p>
-                <p className="mt-2">
-                    This product uses the TMDB API but is not endorsed or certified by TMDB.
-                </p>
-                <p>
-                    Movie data & images provided by{" "}
-                    <a
-                        href="https://www.themoviedb.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                    >
-                        TMDB
-                    </a>
-                </p>
-                <p className="mt-4">
-                    <img
-                        src="/tmdb.svg" // TMDB 로고 경로
-                        alt="TMDB Logo"
-                        className="inline-block h-6 mx-1" // 로고 스타일 조정
-                    />
-                </p>
+            <footer className="flex justify-center container p-10 text-center text-sm text-gray-600">
+                <div className="mr-10 pr-10 border-r border-gray-600"> {/* 세로 바 추가 */}
+                    <p>seenhub v.0.1</p>
+                    <p>
+                        Developed by{" "}
+                        <a
+                            href="https://github.com/eggzuxi"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                        >
+                            EGGZUXI
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        Album data & images provided by{" "}
+                        <a
+                            href="https://www.last.fm/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                        >
+                            Last.fm
+                        </a>
+                    </p>
+                    <p>
+                        This product uses the TMDB API but is not endorsed or certified by TMDB.
+                    </p>
+                    <p>
+                        Movie data & images provided by{" "}
+                        <a
+                            href="https://www.themoviedb.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                        >
+                            TMDB
+                        </a>
+                    </p>
+                    <p className="mt-4">
+                        <img
+                            src="/tmdb.svg"
+                            alt="TMDB Logo"
+                            className="inline-block h-6 mx-1"
+                        />
+                    </p>
+                </div>
             </footer>
 
             {showModal && (
