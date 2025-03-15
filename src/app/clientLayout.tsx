@@ -24,23 +24,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                setShowModal(false);
-            }
-        };
-
         if (showModal) {
-            if (typeof window !== 'undefined') { // 클라이언트 측에서만 실행
-                document.addEventListener("mousedown", handleClickOutside);
-            }
-        }
+            const handleClickOutside = (event: MouseEvent) => {
+                if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                    setShowModal(false);
+                }
+            };
 
-        return () => {
-            if (typeof window !== 'undefined') { // 클라이언트 측에서만 실행
+            document.addEventListener("mousedown", handleClickOutside);
+
+            return () => {
                 document.removeEventListener("mousedown", handleClickOutside);
-            }
-        };
+            };
+        }
     }, [showModal]);
 
     const handleLogout = async () => {
