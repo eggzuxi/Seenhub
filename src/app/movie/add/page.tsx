@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { searchMovie, getMoviePosterUrl } from "@/app/api/movie/tmdb";
+import useAuth from "../../../../hooks/useAuth";
 
 const genres = ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"];
 
 function AddMoviePage() {
+
+    const { user, loading: authLoading } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push("/movie");
+        }
+    }, [user, authLoading, router]);
+
     const [formData, setFormData] = useState({
         title: "",
         director: "",
@@ -16,7 +27,6 @@ function AddMoviePage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [searchResults, setSearchResults] = useState<{ id: number; title: string; poster_path: string | null }[]>([]);
-    const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

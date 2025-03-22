@@ -1,11 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
+import useAuth from "../../../../hooks/useAuth";
 
 const genres = ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"];
 
 function AddMusicPage() {
+
+    const { user, loading: authLoading } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push("/music");
+        }
+    }, [user, authLoading, router]);
+
     const [formData, setFormData] = useState({
         mbid: "",
         title: "",
@@ -14,7 +25,6 @@ function AddMusicPage() {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
