@@ -80,7 +80,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             <main>{children}</main>
 
-            <footer className="flex justify-center container p-10 text-center text-sm text-gray-600">
+            <footer className="flex items-start container p-10 text-sm text-gray-600">
                 <div className="mr-10 pr-10 border-r border-gray-600"> {/* 세로 바 추가 */}
                     <p>seenhub v.0.1</p>
                     <p>
