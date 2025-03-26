@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/common/AuthGuard";
 
 export default function JoinPage() {
     const [formData, setFormData] = useState({
@@ -39,41 +40,43 @@ export default function JoinPage() {
     };
 
     return (
-        <div className="flex h-screen">
-            <form className="w-full p-10 shadow-md rounded-lg" onSubmit={handleSubmit}>
-                <h2 className="text-2xl font-bold mb-4">Join</h2>
-                {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-                <input
-                    type="text"
-                    name="id"
-                    placeholder="ID"
-                    value={formData.id}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded mb-2 font-black"
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded mb-2"
-                    required
-                />
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded mb-4"
-                    required
-                />
-                <button type="submit" className="w-full p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                    Sign Up
-                </button>
-            </form>
-        </div>
+        <AuthGuard>
+            <div className="flex h-screen">
+                <form className="w-full p-10 shadow-md rounded-lg" onSubmit={handleSubmit}>
+                    <h2 className="text-2xl font-bold mb-4">Join</h2>
+                    {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+                    <input
+                        type="text"
+                        name="id"
+                        placeholder="ID"
+                        value={formData.id}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded mb-2 font-black"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded mb-2"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    />
+                    <button type="submit" className="w-full p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Sign Up
+                    </button>
+                </form>
+            </div>
+        </AuthGuard>
     );
 }

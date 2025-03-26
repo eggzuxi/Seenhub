@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useUserStore from "../../../../store/userStore";
+import AuthGuard from "@/components/common/AuthGuard";
 
 const genres = ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"];
 
@@ -71,59 +72,61 @@ function AddMusicPage() {
     };
 
     return (
-        <div className="container p-10">
-            <h1 className="text-2xl font-bold mb-4">Add music</h1>
-            {error && <p className="text-red-500">{error}</p>}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    name="mbid"
-                    placeholder="mbid"
-                    value={formData.mbid}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
-                />
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
-                    required
-                />
-                <input
-                    type="text"
-                    name="artist"
-                    placeholder="artist"
-                    value={formData.artist}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
-                    required
-                />
-                <div className="flex flex-wrap gap-2">
-                    {genres.map((genre) => (
-                        <label key={genre} className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                value={genre}
-                                checked={formData.genre.includes(genre)}
-                                onChange={handleGenreChange}
-                                className="w-4 h-4 border border-gray-400 rounded-sm bg-transparent accent-white"
-                            />
-                            <span>{genre}</span>
-                        </label>
-                    ))}
-                </div>
-                <button
-                    type="submit"
-                    className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
-                    disabled={loading}
-                >
-                    {loading ? "adding..." : "ADD"}
-                </button>
-            </form>
-        </div>
+        <AuthGuard>
+            <div className="container p-10">
+                <h1 className="text-2xl font-bold mb-4">Add music</h1>
+                {error && <p className="text-red-500">{error}</p>}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <input
+                        type="text"
+                        name="mbid"
+                        placeholder="mbid"
+                        value={formData.mbid}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded text-black"
+                    />
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded text-black"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="artist"
+                        placeholder="artist"
+                        value={formData.artist}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded text-black"
+                        required
+                    />
+                    <div className="flex flex-wrap gap-2">
+                        {genres.map((genre) => (
+                            <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    value={genre}
+                                    checked={formData.genre.includes(genre)}
+                                    onChange={handleGenreChange}
+                                    className="w-4 h-4 border border-gray-400 rounded-sm bg-transparent accent-white"
+                                />
+                                <span>{genre}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
+                        disabled={loading}
+                    >
+                        {loading ? "adding..." : "ADD"}
+                    </button>
+                </form>
+            </div>
+        </AuthGuard>
     );
 }
 
