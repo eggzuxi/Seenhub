@@ -1,22 +1,13 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { searchMovie, getMoviePosterUrl } from "@/app/api/movie/tmdb";
-import useAuth from "../../../../hooks/useAuth";
+import useUserStore from "../../../../store/userStore";
 
 const genres = ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"];
 
 function AddMoviePage() {
-
-    const { user, loading: authLoading } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push("/movie");
-        }
-    }, [user, authLoading, router]);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -24,8 +15,10 @@ function AddMoviePage() {
         genre: [] as string[],
         posterPath: "", // 추가: 포스터 경로 저장
     });
-    const [loading, setLoading] = useState(false);
+    const setLoading = useUserStore((state) => state.setLoading);
+    const loading = useUserStore((state) => state.loading);
     const [error, setError] = useState("");
+    const router = useRouter();
     const [searchResults, setSearchResults] = useState<{ id: number; title: string; poster_path: string | null }[]>([]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

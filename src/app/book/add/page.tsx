@@ -1,29 +1,22 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useAuth from "../../../../hooks/useAuth";
+import useUserStore from "../../../../store/userStore";
 
 const genres = ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"]
 
 function AddBookPage() {
-
-    const { user, loading: authLoading } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push("/book");
-        }
-    }, [user, authLoading, router]);
 
     const [formData, setFormData] = useState({
         title: "",
         author: "",
         genre: [] as string[],
     });
-    const [loading, setLoading] = useState(false);
+    const setLoading = useUserStore((state) => state.setLoading);
+    const loading = useUserStore((state) => state.loading);
     const [error, setError] = useState("");
+    const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

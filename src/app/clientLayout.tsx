@@ -3,10 +3,11 @@
 import Link from "next/link";
 import Avatar from "boring-avatars";
 import {useEffect, useRef, useState} from "react";
-import useAuth from "../../hooks/useAuth";
+import useUserStore from "../../store/userStore";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-    const { user } = useAuth();
+    const user = useUserStore((state) => state.user);
+    const setUser = useUserStore((state) => state.clearUser);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             if (!res.ok) {
                 throw new Error("Logout failed");
             }
-            window.location.reload(); // 로그아웃 후 페이지 새로고침
+            setUser();
+            setShowModal(false);
         } catch (error) {
             console.error("Logout error:", error);
             alert("Logout failed. Please try again.");
@@ -82,7 +84,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             <footer className="flex items-start container p-10 text-sm text-gray-600">
                 <div className="mr-10 pr-10 border-r border-gray-600"> {/* 세로 바 추가 */}
-                    <p>seenhub v.0.1</p>
+                    <p>seenhub v.1.0</p>
                     <p>
                         Developed by{" "}
                         <a

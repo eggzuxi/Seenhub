@@ -4,14 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {Music} from "../../../types/music";
 import Pagination from "@/components/common/Pagination";
-import useAuth from "../../../hooks/useAuth";
 import AlbumArt from "@/components/AlbumArt";
 import Spinner from "@/components/common/Spinner";
+import useUserStore from "../../../store/userStore";
 
 function Page() {
-    const { user, loading: authLoading } = useAuth();
+    const user = useUserStore((state) => state.user);
+    const setLoading = useUserStore((state) => state.setLoading);
+    const loading = useUserStore((state) => state.loading);
     const [musicList, setMusicList] = useState<Music[]>([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     const [ currentPage, setCurrentPage ] = useState(1);
@@ -106,7 +107,7 @@ function Page() {
 
     return (
         <div className="container p-10">
-            {!authLoading && user && (
+            {!loading && user && (
                 <Link href="/music/add">
                     <button className="mb-5 bg-gray-500 text-white font-bold px-4 py-2 rounded">
                         ADD
@@ -133,7 +134,7 @@ function Page() {
                                     <p className="text-gray-600">{music.artist}</p>
                                 </div>
                                 <div className="ml-auto">
-                                    {!authLoading && user && (
+                                    {!loading && user && (
                                         <button
                                             className="text-gray-500 hover:text-gray-200 font-bold text-xl"
                                             onClick={(event) => openModal(event, music._id)}

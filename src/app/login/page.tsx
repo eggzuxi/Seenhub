@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useAuth from "../../../hooks/useAuth";
 import Spinner from "@/components/common/Spinner";
+import useUserStore from "../../../store/userStore";
+import {User} from "../../../types/user";
 
 export default function LoginPage() {
-    const { loading } = useAuth();
+    const setUser = useUserStore((state) => state.setUser);
+    const setLoading = useUserStore((state) => state.setLoading);
+    const loading = useUserStore((state) => state.loading);
     const [formData, setFormData] = useState({
         id: "",
         password: "",
     });
+
     const [error, setError] = useState("");
     const router = useRouter();
 
@@ -21,6 +25,7 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
         try {
             const res = await fetch("/api/user", {
                 method: "POST",
@@ -33,8 +38,10 @@ export default function LoginPage() {
                 throw new Error(data.error || "Login failed");
             }
 
+            setUser(data.user as User);
             alert(`Welcome, ${data.user.name}!`);
             router.push("/");
+
         } catch (error) {
             setError(error instanceof Error ? error.message : "Something went wrong");
         }
