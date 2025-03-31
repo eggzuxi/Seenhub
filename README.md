@@ -6,6 +6,8 @@ This is my little corner of the internet where I can record all the amazing musi
 
 #### And More...
 1 이미지 API 적용하기 <br />
-2 분야별 장르 분석화면 개발<br />
-3 드라마 & 애니메이션 페이지 추가 ✔️<br />
-4 퍼포먼스 점수 높이기 ✔️
+2 분야별 장르 분석화면 개발 <br />
+3 드라마 & 애니메이션 페이지 추가 ✔️ <br />
+4 퍼포먼스 점수 높이기 ✔️ <br />
+5 상세정보 페이지 개발 <br />
+6 메인페이지 수정
