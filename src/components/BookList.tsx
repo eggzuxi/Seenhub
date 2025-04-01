@@ -30,6 +30,7 @@ function BookList({ initialBooks }: BookListProps) {
 
     useEffect(() => {
         setLoading(false);
+        fetchBookList();
     }, []);
 
     const totalPages = Math.ceil(bookList.length / itemsPerPage);
@@ -66,7 +67,7 @@ function BookList({ initialBooks }: BookListProps) {
 
             alert("Book successfully deleted");
             // 삭제된 책을 목록에서 제거
-            setBookList((prevBooks) => prevBooks.filter((book) => book._id !== selectedBookId));
+            await fetchBookList();
             closeModal();
         } catch (error) {
             if (error instanceof Error) {
@@ -74,6 +75,24 @@ function BookList({ initialBooks }: BookListProps) {
             } else {
                 setError("An unknown error occurred");
             }
+        }
+    };
+
+    const fetchBookList = async () => {
+        setLoading(true);
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            const response = await fetch(`${baseUrl}/api/book`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch book: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            setBookList(data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching book:", error);
+            setError("Failed to fetch book from API");
+            setLoading(false);
         }
     };
 

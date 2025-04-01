@@ -31,6 +31,7 @@ function MusicList({ initialMusic }: MusicListProps) {
 
     useEffect(() => {
         setLoading(false);
+        fetchMusicList();
     }, []);
 
     const totalPages = Math.ceil(musicList.length / itemsPerPage);
@@ -67,7 +68,7 @@ function MusicList({ initialMusic }: MusicListProps) {
 
             alert("Music successfully deleted");
             // 삭제된 음악을 목록에서 제거
-            setMusicList((prevMusic) => prevMusic.filter((music) => music._id !== selectedMusicId));
+            await fetchMusicList();
             closeModal();
         } catch (error) {
             if (error instanceof Error) {
@@ -75,6 +76,24 @@ function MusicList({ initialMusic }: MusicListProps) {
             } else {
                 setError("An unknown error occurred");
             }
+        }
+    };
+
+    const fetchMusicList = async () => {
+        setLoading(true);
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            const response = await fetch(`${baseUrl}/api/music`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch music: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            setMusicList(data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching music:", error);
+            setError("Failed to fetch music from API");
+            setLoading(false);
         }
     };
 

@@ -30,6 +30,7 @@ function SeriesList({ initialSeries }: SeriesListProps) {
 
     useEffect(() => {
         setLoading(false);
+        fetchSeriesList();
     }, []);
 
     const totalPages = Math.ceil(seriesList.length / itemsPerPage);
@@ -66,7 +67,7 @@ function SeriesList({ initialSeries }: SeriesListProps) {
 
             alert("Series successfully deleted");
             // 삭제된 시리즈를 목록에서 제거
-            setSeriesList((prevSeries) => prevSeries.filter((series) => series._id !== selectedSeriesId));
+            await fetchSeriesList();
             closeModal();
         } catch (error) {
             if (error instanceof Error) {
@@ -74,6 +75,24 @@ function SeriesList({ initialSeries }: SeriesListProps) {
             } else {
                 setError("An unknown error occurred");
             }
+        }
+    };
+
+    const fetchSeriesList = async () => {
+        setLoading(true);
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            const response = await fetch(`${baseUrl}/api/series`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch series: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            setSeriesList(data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching series:", error);
+            setError("Failed to fetch series from API");
+            setLoading(false);
         }
     };
 
