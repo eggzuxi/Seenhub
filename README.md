@@ -10,4 +10,6 @@ This is my little corner of the internet where I can record all the amazing musi
 3 드라마 & 애니메이션 페이지 추가 ✔️ <br />
 4 퍼포먼스 점수 높이기 ✔️ <br />
 5 상세정보 페이지 개발 <br />
-6 메인페이지 수정
+6 메인페이지 수정 <br />
+7 카테고리 & 필터링 <br />
+8 권한별 기능 추가하기

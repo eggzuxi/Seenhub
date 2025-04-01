@@ -54,7 +54,7 @@ export default function LoginPage() {
                     <Spinner size={50} color="#3498db"/>
                 </div>
             ) : (
-                <form className="w-full max-w-md p-10 shadow-md rounded-lg" onSubmit={handleSubmit}>
+                <form className="w-full max-w-md p-10 rounded-lg" onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-4">Login</h2>
                     {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
                     <input

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: 'SEENHUB',
         short_name: 'Seenhub',
-        description: 'A Progressive Web App built with Next.js',
+        description: 'Seenhub',
         start_url: '/',
         display: 'standalone',
         background_color: '#000000',

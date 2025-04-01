@@ -117,7 +117,7 @@ function MusicList({ initialMusic }: MusicListProps) {
         <div className="container p-10">
             {!loading && user && (
                 <Link href="/music/add">
-                    <button className="mb-5 bg-gray-500 text-white font-bold px-4 py-2 rounded">
+                    <button className="mb-5 bg-blue-400 text-white font-bold px-4 py-2 rounded">
                         ADD
                     </button>
                 </Link>
@@ -144,7 +144,7 @@ function MusicList({ initialMusic }: MusicListProps) {
                                 <div className="ml-auto">
                                     {!loading && user && (
                                         <button
-                                            className="text-gray-500 hover:text-gray-200 font-bold text-xl"
+                                            className="text-gray-500 hover:text-gray-800 font-bold text-xl"
                                             onClick={(event) => openModal(event, music._id)}
                                         >
                                             ⋮
@@ -161,8 +161,8 @@ function MusicList({ initialMusic }: MusicListProps) {
             {isOpen && (
                 <div
                     ref={modalRef}
-                    className="absolute bg-black shadow-lg border border-gray-200 rounded-lg p-2 w-40"
-                    style={{top: modalPosition.y, left: modalPosition.x}}
+                    className="absolute shadow-lg border border-gray-200 rounded-lg p-2 w-40"
+                    style={{backgroundColor: 'var(--background)', color: 'black', top: modalPosition.y, left: modalPosition.x}}
                 >
                     <button className="block w-full text-left p-2" onClick={closeModal}>
                         수정

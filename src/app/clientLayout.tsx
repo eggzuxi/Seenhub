@@ -135,7 +135,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-500 p-6 rounded-md w-60" ref={modalRef}>
+                    <div className="bg-amber-50 p-6 rounded-md w-60" ref={modalRef}>
                         <h2 className="text-center text-lg font-bold mb-4">Welcome!</h2>
                         <div className="flex justify-center space-x-4">
                             {user ? ( // user 상태에 따라 버튼 변경
