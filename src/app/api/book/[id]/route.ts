@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 import { isValidObjectId } from "mongoose";
 
 // 조회
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
     try {
         await connectDB();
@@ -31,13 +31,15 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 }
 
 // 수정
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
 
-    const { id } = params;
+    const { id } = await params;
     const { title, author, genre } = await req.json();
 
     try {
         await connectDB();
+
+        console.log(typeof Book.findById);
 
         if (!isValidObjectId(id)) {
             return NextResponse.json({ error: "Invalid ID format." }, { status: 400 });
