@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import { Schema, model, Model, Document } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
+interface UserDocument extends Document {
+    id: string;
+    password: string;
+    name: string;
+    createdAt: Date;
+    delFlag: boolean;
+}
+
+const UserSchema = new Schema<UserDocument>({
     id: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
@@ -8,4 +16,6 @@ const UserSchema = new mongoose.Schema({
     delFlag: { type: Boolean, default: false }, // 삭제 여부 플래그
 });
 
-export const User = mongoose.models.User || mongoose.model("User", UserSchema);
+const User = model<UserDocument, Model<UserDocument>>('User', UserSchema);
+
+export { User };

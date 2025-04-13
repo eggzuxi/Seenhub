@@ -2,7 +2,6 @@ import { connectDB } from "../../../../lib/mongodb";
 import { Movie } from "../../../../models/Movie";
 import { NextResponse } from "next/server";
 import { searchMovie } from "@/app/api/movie/tmdb";
-import {isValidObjectId} from "mongoose";
 
 // 추가
 export async function POST(req: Request) {

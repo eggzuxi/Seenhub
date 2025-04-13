@@ -1,7 +1,6 @@
 import {connectDB} from "../../../../lib/mongodb";
 import {Book} from "../../../../models/Book";
 import {NextResponse} from "next/server";
-import {isValidObjectId} from "mongoose";
 
 // 추가
 export async function POST(req: Request) {
