@@ -15,7 +15,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "motion": "^12.4.3",
-    "next": "^15.2.1",
+    "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.3"
@@ -24,6 +24,7 @@
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.8",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
