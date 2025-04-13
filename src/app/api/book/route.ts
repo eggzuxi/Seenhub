@@ -1,6 +1,7 @@
 import {connectDB} from "../../../../lib/mongodb";
 import {Book} from "../../../../models/Book";
 import {NextResponse} from "next/server";
+import {isValidObjectId} from "mongoose";
 
 // 추가
 export async function POST(req: Request) {
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "Failed to add data" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to add data." }, { status: 500 });
     }
 }
 
@@ -33,7 +34,7 @@ export async function GET() {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "Failed to look up data" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to look up data." }, { status: 500 });
     }
 }
 
@@ -45,7 +46,7 @@ export async function PUT(req: Request) {
 
         const { id } = await req.json();
         if (!id) {
-            return NextResponse.json({ error: "ID not provided" }, { status: 400 });
+            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
         }
 
         const updatedBook = await Book.findByIdAndUpdate(
@@ -55,15 +56,15 @@ export async function PUT(req: Request) {
         );
 
         if (!updatedBook) {
-            return NextResponse.json({ error: "Book not found" }, { status: 404 });
+            return NextResponse.json({ error: "Book not found." }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Book has been deleted", book: updatedBook });
+        return NextResponse.json({ message: "Book has been deleted.", book: updatedBook });
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "Failed to delete book" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to delete book." }, { status: 500 });
     }
 
 }

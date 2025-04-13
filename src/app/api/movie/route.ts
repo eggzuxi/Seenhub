@@ -2,6 +2,7 @@ import { connectDB } from "../../../../lib/mongodb";
 import { Movie } from "../../../../models/Movie";
 import { NextResponse } from "next/server";
 import { searchMovie } from "@/app/api/movie/tmdb";
+import {isValidObjectId} from "mongoose";
 
 // 추가
 export async function POST(req: Request) {
@@ -24,13 +25,13 @@ export async function POST(req: Request) {
             await newMovie.save();
             return NextResponse.json(newMovie);
         } else {
-            return NextResponse.json({ error: "TMDB에서 영화를 찾을 수 없습니다." }, { status: 404 });
+            return NextResponse.json({ error: "Could not find the movie on TMDB." }, { status: 404 });
         }
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "데이터 추가 실패" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to add data." }, { status: 500 });
     }
 }
 
@@ -45,7 +46,7 @@ export async function GET() {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "데이터 조회 실패" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to look up data." }, { status: 500 });
     }
 }
 
@@ -57,7 +58,7 @@ export async function PUT(req: Request) {
 
         const { id } = await req.json();
         if (!id) {
-            return NextResponse.json({ error: "ID not provided" }, { status: 400 });
+            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
         }
 
         const updatedMovie = await Movie.findByIdAndUpdate(
@@ -67,15 +68,15 @@ export async function PUT(req: Request) {
         );
 
         if (!updatedMovie) {
-            return NextResponse.json({ error: "Movie not found" }, { status: 404 });
+            return NextResponse.json({ error: "Movie not found." }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Movie has been deleted", movie: updatedMovie });
+        return NextResponse.json({ message: "Movie has been deleted.", movie: updatedMovie });
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "Failed to delete movie" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to delete movie." }, { status: 500 });
     }
 
 }
