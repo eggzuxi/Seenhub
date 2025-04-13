@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import { Schema, model, Model, Document } from 'mongoose';
 
-const SeriesSchema = new mongoose.Schema({
+interface SeriesDocument extends Document {
+    title: string;
+    broadcaster: string;
+    genre: string[];
+    createdAt: Date;
+    delflag: boolean;
+}
+
+const SeriesSchema = new Schema<SeriesDocument>({
     title: { type: String, required: true },
     broadcaster: { type: String, required: true },
     genre: {
@@ -12,4 +20,6 @@ const SeriesSchema = new mongoose.Schema({
     delflag: { type: Boolean, default: false },
 });
 
-export const Series = mongoose.models.Series || mongoose.model("Series", SeriesSchema);
+const Series = model<SeriesDocument, Model<SeriesDocument>>('Series', SeriesSchema);
+
+export { Series };

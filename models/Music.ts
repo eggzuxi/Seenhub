@@ -1,14 +1,27 @@
-import mongoose from "mongoose";
+import { Schema, model, Model, Document } from 'mongoose';
 
-const MusicSchema = new mongoose.Schema({
+interface MusicDocument extends Document {
+    mbid: string;
+    title: string;
+    artist: string;
+    genre: string[];
+    createdAt: Date;
+    delflag: boolean;
+}
+
+const MusicSchema = new Schema<MusicDocument>({
     mbid: { type: String, required: true },
     title: { type: String, required: true },
     artist: { type: String, required: true },
-    genre: { type: [String], required: true,
-        enum: ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"]
+    genre: {
+        type: [String],
+        required: true,
+        enum: ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"],
     },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });
 
-export const Music = mongoose.models.Music || mongoose.model("Music", MusicSchema);
+const Music = model<MusicDocument, Model<MusicDocument>>('Music', MusicSchema);
+
+export { Music };

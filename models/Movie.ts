@@ -1,14 +1,27 @@
-import mongoose from "mongoose";
+import { Schema, model, Model, Document } from 'mongoose';
 
-const MovieSchema = new mongoose.Schema({
+interface MovieDocument extends Document {
+    title: string;
+    director: string;
+    genre: string[];
+    posterPath: string;
+    createdAt: Date;
+    delflag: boolean;
+}
+
+const MovieSchema = new Schema<MovieDocument>({
     title: { type: String, required: true },
     director: { type: String, required: true },
-    genre: { type: [String], required: true,
-        enum: ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"]
+    genre: {
+        type: [String],
+        required: true,
+        enum: ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"],
     },
     posterPath: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });
 
-export const Movie = mongoose.models.Movie || mongoose.model("Movie", MovieSchema);
+const Movie = model<MovieDocument, Model<MovieDocument>>('Movie', MovieSchema);
+
+export { Movie };

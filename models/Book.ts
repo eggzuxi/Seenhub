@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import { Schema, model, Model, Document } from 'mongoose';
 
-const BookSchema = new mongoose.Schema({
+interface BookDocument extends Document {
+    title: string;
+    author: string;
+    genre: string[];
+    createdAt: Date;
+    delflag: boolean;
+}
+
+const BookSchema = new Schema<BookDocument>({
     title: { type: String, required: true },
     author: { type: String, required: true },
     genre: { type: [String], required: true,
@@ -10,4 +18,6 @@ const BookSchema = new mongoose.Schema({
     delflag: { type: Boolean, default: false },
 });
 
-export const Book = mongoose.models.Book || mongoose.model("Book", BookSchema);
+const Book = model<BookDocument, Model<BookDocument>>('Book', BookSchema);
+
+export { Book };
