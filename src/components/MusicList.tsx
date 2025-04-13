@@ -164,9 +164,9 @@ function MusicList({ initialMusic }: MusicListProps) {
                     className="absolute shadow-lg border border-gray-200 rounded-lg p-2 w-40"
                     style={{backgroundColor: 'var(--background)', color: 'black', top: modalPosition.y, left: modalPosition.x}}
                 >
-                    <button className="block w-full text-left p-2" onClick={closeModal}>
+                    <Link href={`/music/update/${selectedMusicId}`} className="block w-full text-left p-2">
                         수정
-                    </button>
+                    </Link>
                     <button className="block w-full text-left p-2 text-red-500" onClick={handleDelete}>
                         삭제
                     </button>
