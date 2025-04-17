@@ -146,7 +146,7 @@ function MovieList({ initialMovies }: MovieListProps) {
                 <div
                     ref={modalRef}
                     className="absolute bg-black shadow-lg border border-gray-200 rounded-lg p-2 w-40"
-                    style={{backgroundColor: 'var(--background)', color: 'black', top: modalPosition.y, left: modalPosition.x}}
+                    style={{backgroundColor: 'var(--background)', top: modalPosition.y, left: modalPosition.x}}
                 >
                     <Link href={`/movie/update/${selectedMovieId}`} className="block w-full text-left p-2">
                         수정

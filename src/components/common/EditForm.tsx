@@ -85,7 +85,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                     name="mbid"
                     value={(formData as Music).mbid}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded"
                     placeholder="MBID"
                 />
             )}
@@ -95,7 +95,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full p-2 border rounded text-black"
+                className="w-full p-2 border rounded"
                 placeholder="Title"
                 required
             />
@@ -106,7 +106,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                     name="author"
                     value={(formData as Book).author}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded"
                     placeholder="Author"
                     required
                 />
@@ -118,7 +118,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                     name="artist"
                     value={(formData as Music).artist}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded"
                     placeholder="Artist"
                     required
                 />
@@ -130,7 +130,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                     name="broadcaster"
                     value={(formData as Series).broadcaster}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded"
                     placeholder="Broadcaster"
                     required
                 />
@@ -143,7 +143,7 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                         name="director"
                         value={(formData as Movie).director}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded text-black"
+                        className="w-full p-2 border rounded"
                         placeholder="Director"
                         required
                     />
