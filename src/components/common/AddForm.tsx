@@ -120,7 +120,7 @@ function AddForm({ type }: AddItemPageProps) {
                             placeholder="MBID"
                             value={formData.mbid || ""}
                             onChange={handleChange}
-                            className="w-full p-2 border rounded text-black"
+                            className="w-full p-2 border rounded"
                         />
                     )}
                     <input
@@ -129,7 +129,7 @@ function AddForm({ type }: AddItemPageProps) {
                         placeholder="Title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded text-black"
+                        className="w-full p-2 border rounded"
                         required
                     />
                     <input
@@ -139,7 +139,7 @@ function AddForm({ type }: AddItemPageProps) {
                         placeholder={type === "music" ? "Artist" : type === "book" ? "Author" : "Broadcaster"}
                         value={type === "music" ? formData.artist : type === "book" ? formData.author : formData.broadcaster}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded text-black"
+                        className="w-full p-2 border rounded"
                         required
                     />
                     <div className="flex flex-wrap gap-2">

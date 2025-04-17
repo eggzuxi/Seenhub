@@ -144,7 +144,7 @@ function MusicList({ initialMusic }: MusicListProps) {
                                 <div className="ml-auto">
                                     {!loading && user && (
                                         <button
-                                            className="text-gray-500 hover:text-gray-800 font-bold text-xl"
+                                            className="font-bold text-xl"
                                             onClick={(event) => openModal(event, music._id)}
                                         >
                                             ⋮
@@ -162,7 +162,7 @@ function MusicList({ initialMusic }: MusicListProps) {
                 <div
                     ref={modalRef}
                     className="absolute shadow-lg border border-gray-200 rounded-lg p-2 w-40"
-                    style={{backgroundColor: 'var(--background)', color: 'black', top: modalPosition.y, left: modalPosition.x}}
+                    style={{backgroundColor: 'var(--background)', top: modalPosition.y, left: modalPosition.x}}
                 >
                     <Link href={`/music/update/${selectedMusicId}`} className="block w-full text-left p-2">
                         수정

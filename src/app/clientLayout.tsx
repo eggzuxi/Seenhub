@@ -4,6 +4,7 @@ import Link from "next/link";
 import Avatar from "boring-avatars";
 import {useEffect, useRef, useState} from "react";
 import useUserStore from "../../store/userStore";
+import ThemeButton from "@/components/common/ThemeButton";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const user = useUserStore((state) => state.user);
@@ -59,10 +60,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <header>
                 <div className="container flex justify-between p-10">
                     <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
-                    <div onClick={handleAvatarClick} style={{cursor: 'pointer'}}>
-                        <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40}/>
+                    <div className="flex items-center space-x-4">
+                        <div onClick={handleAvatarClick} style={{cursor: 'pointer'}}>
+                            <Avatar name="Julia" colors={["#ff0000", "#0000ff"]} variant="beam" size={40}/>
+                        </div>
+                        <ThemeButton />
                     </div>
-
                 </div>
                 <div className="container pl-10">
                     <ol>
@@ -134,14 +137,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </footer>
 
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-amber-50 p-6 rounded-md w-60" ref={modalRef}>
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="p-6 rounded-md w-60 bg-ivory dark:bg-darkgray" ref={modalRef}>
                         <h2 className="text-center text-lg font-bold mb-4">Welcome!</h2>
                         <div className="flex justify-center space-x-4">
                             {user ? ( // user 상태에 따라 버튼 변경
                                 <button
                                     onClick={handleLogout}
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                    className="bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded"
                                 >
                                     Logout
                                 </button>

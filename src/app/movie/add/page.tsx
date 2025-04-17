@@ -116,7 +116,7 @@ function AddMoviePage() {
                             placeholder="title"
                             value={formData.title}
                             onChange={handleChange}
-                            className="w-full p-2 border rounded text-black"
+                            className="w-full p-2 border rounded"
                             required
                         />
                         <button
@@ -164,7 +164,7 @@ function AddMoviePage() {
                         placeholder="director"
                         value={formData.director}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded text-black"
+                        className="w-full p-2 border rounded"
                         required
                     />
                     <div className="flex flex-wrap gap-2">

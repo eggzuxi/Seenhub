@@ -129,6 +129,7 @@ function BookList({ initialBooks }: BookListProps) {
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
                 <>
+                    <div className="pb-4">Reading is hard. Updates are harder 😴</div>
                     <ul className="space-y-4">
                         {displayedBook.map((book, index) => (
                             <li key={index}
@@ -156,7 +157,7 @@ function BookList({ initialBooks }: BookListProps) {
                 <div
                     ref={modalRef}
                     className="absolute bg-black shadow-lg border border-gray-200 rounded-lg p-2 w-40"
-                    style={{backgroundColor: 'var(--background)', color: 'black', top: modalPosition.y, left: modalPosition.x}}
+                    style={{backgroundColor: 'var(--background)', top: modalPosition.y, left: modalPosition.x}}
                 >
                     <Link href={`/book/update/${selectedBookId}`} className="block w-full text-left p-2">
                         수정
