@@ -4,6 +4,7 @@ interface BookDocument extends Document {
     title: string;
     author: string;
     genre: string[];
+    thumbnail: string;
     createdAt: Date;
     delflag: boolean;
 }
@@ -14,6 +15,7 @@ const BookSchema = new Schema<BookDocument>({
     genre: { type: [String], required: true,
         enum: ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"]
     },
+    thumbnail: { type: String, required: false },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });
