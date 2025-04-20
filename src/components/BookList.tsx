@@ -133,10 +133,19 @@ function BookList({ initialBooks }: BookListProps) {
                     <ul className="space-y-4">
                         {displayedBook.map((book, index) => (
                             <li key={index}
-                                className="flex justify-between items-center p-4 border border-gray-300 rounded-lg shadow-sm">
-                                <div>
-                                    <p className="font-bold">{book.title}</p>
-                                    <p className="text-gray-600">{book.author}</p>
+                                className="flex justify-between items-start p-4 border border-gray-300 rounded-lg shadow-sm">
+                                <div className="flex items-start space-x-4">
+                                    {book.thumbnail && (
+                                        <img
+                                            src={`${book.thumbnail}`}
+                                            alt={`${book.title} image`}
+                                            className="w-14 h-auto rounded"
+                                        />
+                                    )}
+                                    <div>
+                                        <p className="font-bold">{book.title}</p>
+                                        <p className="text-gray-600">{book.author}</p>
+                                    </div>
                                 </div>
                                 {!loading && user && (
                                     <button

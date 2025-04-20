@@ -4,6 +4,7 @@ import {useState} from "react";
 import useUserStore from "../../../store/userStore";
 import {useRouter} from "next/navigation";
 import AuthGuard from "@/components/common/AuthGuard";
+import {searchBook} from "@/app/api/book/kakao";
 
 const genreOptions = {
     book: ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"],
@@ -23,6 +24,12 @@ interface AddItemPageProps {
     type: ItemType;
 }
 
+interface BookSearchResult {
+    title: string;
+    thumbnail: string;
+    authors: string[];
+}
+
 function AddForm({ type }: AddItemPageProps) {
     const initialFormState = {
         title: "",
@@ -30,6 +37,7 @@ function AddForm({ type }: AddItemPageProps) {
         artist: "", // 초기 상태 수정
         broadcaster: "", // 초기 상태 수정
         genre: [] as string[],
+        thumbnail: "",
         ...(type === "music" && { mbid: "" }),
     };
 
@@ -38,6 +46,7 @@ function AddForm({ type }: AddItemPageProps) {
     const loading = useUserStore((state) => state.loading);
     const [error, setError] = useState("");
     const router = useRouter();
+    const [searchResults, setSearchResults] = useState<BookSearchResult[]>([]); // State for Kakao search results
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -56,6 +65,42 @@ function AddForm({ type }: AddItemPageProps) {
         }));
     };
 
+    const handleSearchBook = async () => {
+        if (type === "book" && !formData.title.trim()) {
+            return;
+        }
+        setLoading(true);
+        setSearchResults([]);
+        setError("");
+
+        try {
+            if (type === "book") {
+                const data = await searchBook(formData.title);
+                if (data) {
+                    setSearchResults(data.slice(0, 5)); // Display up to 5 results
+                }
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Failed to fetch books");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSelectBook = (book: BookSearchResult) => {
+        setFormData({
+            ...formData,
+            title: book.title,
+            author: book.authors.join(", "),
+            thumbnail: book.thumbnail || "",
+        });
+        setSearchResults([]);
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
@@ -71,13 +116,14 @@ function AddForm({ type }: AddItemPageProps) {
                 artist?: string;
                 broadcaster?: string;
                 genre: string[];
+                thumbnail?: string;
             } = {
                 title: formData.title,
                 genre: formData.genre,
             };
 
             if (type === "book") {
-                requestData = { title: formData.title, author: formData.author, genre: formData.genre };
+                requestData = { title: formData.title, author: formData.author, genre: formData.genre, thumbnail: formData.thumbnail };
             } else if (type === "music") {
                 requestData = { mbid: formData.mbid, title: formData.title, artist: formData.artist, genre: formData.genre };
             } else if (type === "series") {
@@ -132,6 +178,49 @@ function AddForm({ type }: AddItemPageProps) {
                         className="w-full p-2 border rounded"
                         required
                     />
+                    {type === "book" && (
+                        <button
+                            type="button"
+                            onClick={handleSearchBook}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            disabled={loading}
+                        >
+                            {loading ? "Searching..." : "Search"}
+                        </button>
+                    )}
+
+                    {/* Book Search Results */}
+                    {type === "book" && searchResults.length > 0 && (
+                        <div className="border p-2 rounded bg-gray-100">
+                            <h2 className="text-lg text-black font-semibold mb-2">Search Results</h2>
+                            <ul className="space-y-2">
+                                {searchResults.map((book, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex items-center space-x-4 cursor-pointer"
+                                        onClick={() => handleSelectBook(book)}
+                                    >
+                                        {book.thumbnail ? (
+                                            <img
+                                                src={book.thumbnail}
+                                                alt={book.title}
+                                                className="w-16 h-auto rounded"
+                                            />
+                                        ) : (
+                                            <div className="w-16 h-16 bg-gray-300 flex items-center justify-center rounded">
+                                                No Image
+                                            </div>
+                                        )}
+                                        <div>
+                                            <p className="text-black font-medium">{book.title}</p>
+                                            <p className="text-gray-600 text-sm">Author: {book.authors.join(", ")}</p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
                     <input
                         key={type === "music" ? "artist" : type === "book" ? "author" : "broadcaster"}
                         type="text"
