@@ -34,7 +34,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
 
     const { id } = await params;
-    const { title, artist, genre } = await req.json();
+    const { title, artist, genre, isMasterPiece } = await req.json();
 
     try {
         await connectDB();
@@ -51,6 +51,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
                 ...(title && { title }),
                 ...(artist && { artist }),
                 ...(genre && { genre: genreArray }),
+                ...(typeof isMasterPiece === "boolean" && { isMasterPiece }),
             },
             { new: true }
         );

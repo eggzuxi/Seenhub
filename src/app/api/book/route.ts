@@ -5,12 +5,12 @@ import {NextResponse} from "next/server";
 // 추가
 export async function POST(req: Request) {
     try {
-        const { title, author, genre } = await req.json();
+        const { title, author, genre, isMasterPiece } = await req.json();
         await connectDB();
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
 
-        const newBook = new Book({ title, author, genre: genreArray });
+        const newBook = new Book({ title, author, genre: genreArray, isMasterPiece });
         await newBook.save();
 
         return NextResponse.json(newBook);

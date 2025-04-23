@@ -5,6 +5,7 @@ interface MovieDocument extends Document {
     director: string;
     genre: string[];
     posterPath: string;
+    isMasterPiece: boolean;
     createdAt: Date;
     delflag: boolean;
 }
@@ -18,6 +19,7 @@ const MovieSchema = new Schema<MovieDocument>({
         enum: ["Romance", "Anime", "Action", "SF", "Drama", "Adventure", "Horror", "Fantasy", "Comedy", "Thriller", "Mystery"],
     },
     posterPath: { type: String, required: true },
+    isMasterPiece: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });

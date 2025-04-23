@@ -4,4 +4,5 @@ export type Book = {
     author: string;
     genre: string;
     thumbnail: string;
+    isMasterPiece: boolean;
 };

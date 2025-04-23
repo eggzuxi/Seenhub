@@ -6,7 +6,7 @@ import { searchMovie } from "@/app/api/movie/tmdb";
 // 추가
 export async function POST(req: Request) {
     try {
-        const { title, director, genre } = await req.json();
+        const { title, director, genre, isMasterPiece } = await req.json();
         await connectDB();
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
                 director,
                 genre: genreArray,
                 posterPath: tmdbMovie.poster_path, // posterPath 추가
+                isMasterPiece: isMasterPiece
             });
             await newMovie.save();
             return NextResponse.json(newMovie);

@@ -4,4 +4,5 @@ export type Movie = {
     director: string;
     genre: string;
     posterPath: string;
+    isMasterPiece: boolean;
 };
