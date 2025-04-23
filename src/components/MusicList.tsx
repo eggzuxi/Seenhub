@@ -130,6 +130,12 @@ function MusicList({ initialMusic }: MusicListProps) {
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
                 <>
+                    <div className="flex justify-between items-center pb-4">
+                        <div className="flex justify-center">
+                            <img className="w-6 h-6 pr-1" src="/images/masterpiece.png" alt="masterpiece"/>
+                            : Crazy album
+                        </div>
+                    </div>
                     <ul className="space-y-4">
                         {displayedMusic.map((music, index) => (
                             <li key={index}
@@ -142,6 +148,19 @@ function MusicList({ initialMusic }: MusicListProps) {
                                     <p className="text-gray-600">{music.artist}</p>
                                 </div>
                                 <div className="ml-auto">
+                                    {!user && music.isMasterPiece && (
+                                        <img
+                                            src="/images/masterpiece.png"
+                                            alt="Masterpiece"
+                                            className="w-6 h-6 ml-auto"
+                                            style={{
+                                                width: '50px', // 원하는 크기로 조정
+                                                height: '40px', // 원하는 크기로 조정
+                                                marginRight: '-10px', // 오른쪽으로 살짝 이동시켜 테두리에 걸치게 함 (음수 값)
+                                                marginTop: '-50px', // 위로 살짝 이동시켜 테두리에 걸치게 함 (음수 값)
+                                            }}
+                                        />
+                                    )}
                                     {!loading && user && (
                                         <button
                                             className="font-bold text-xl"

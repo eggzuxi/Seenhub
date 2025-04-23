@@ -8,7 +8,7 @@ import {searchBook} from "@/app/api/book/kakao";
 
 const genreOptions = {
     book: ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"],
-    music: ["Pop", "Rock", "Metal", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"],
+    music: ["Pop", "Rock", "Metal", "Electronica", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"],
     series: ["Drama", "Animation", "Comedy", "Action", "Thriller", "SF", "Fantasy", "Romance", "Documentary", "Disaster", "Horror"],
 };
 
@@ -37,6 +37,7 @@ function AddForm({ type }: AddItemPageProps) {
         artist: "", // 초기 상태 수정
         broadcaster: "", // 초기 상태 수정
         genre: [] as string[],
+        isMasterPiece: false,
         thumbnail: "",
         ...(type === "music" && { mbid: "" }),
     };
@@ -244,6 +245,21 @@ function AddForm({ type }: AddItemPageProps) {
                                 <span>{genre}</span>
                             </label>
                         ))}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <span className="font-medium">Masterpiece</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={formData.isMasterPiece}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, isMasterPiece: e.target.checked })
+                                }
+                                className="sr-only peer"
+                            />
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors"></div>
+                            <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform peer-checked:translate-x-full"></div>
+                        </label>
                     </div>
                     <button
                         type="submit"
