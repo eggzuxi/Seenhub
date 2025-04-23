@@ -131,8 +131,8 @@ function MusicList({ initialMusic }: MusicListProps) {
             {!loading && !error && (
                 <>
                     <div className="flex justify-between items-center pb-4">
-                        <div className="flex justify-center">
-                            <img className="w-6 h-6 pr-1" src="/images/masterpiece.png" alt="masterpiece"/>
+                        <div className="flex justify-center text-sm">
+                            <img className="w-5 h-5 pr-1" src="/images/masterpiece.png" alt="masterpiece"/>
                             : Crazy album
                         </div>
                     </div>
