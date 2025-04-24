@@ -129,7 +129,7 @@ function BookList({ initialBooks }: BookListProps) {
             {error && <p className="text-red-500">{error}</p>}
             {!loading && !error && (
                 <>
-                    <div className="pb-4">Reading is hard. Updates are harder 😴</div>
+                    <div className="text-sm pb-4">Reading is hard. Updates are harder 😴</div>
                     <ul className="space-y-4">
                         {displayedBook.map((book, index) => (
                             <li key={index}
