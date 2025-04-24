@@ -5,6 +5,7 @@ import Avatar from "boring-avatars";
 import {useEffect, useRef, useState} from "react";
 import useUserStore from "../../store/userStore";
 import ThemeButton from "@/components/common/ThemeButton";
+import {ThemeProvider} from "next-themes";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const user = useUserStore((state) => state.user);
@@ -56,7 +57,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     };
 
     return (
-        <>
+        <ThemeProvider attribute="class">
             <header>
                 <div className="container flex justify-between p-10">
                     <Link href="/" className="text-center text-3xl font-bold">SEENHUB</Link>
@@ -167,7 +168,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     </div>
                 </div>
             )}
-        </>
+        </ThemeProvider>
     )
 
 }
