@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const REST_API_KEY: string = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
 const BASE_URL = 'https://dapi.kakao.com/v3/search/book';
 
 export const fetchKakaoData = async (endpoint: string, params: Record<string, any> = {}) => {
