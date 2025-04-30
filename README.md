@@ -1,14 +1,30 @@
-### Welcome to SEENHUB
-This is my little corner of the internet where I can record all the amazing music, movies, books, and more that I’ve discovered – just for me. No audience, no pressure. Think of it as my personal treasure chest of vibes, where I’m the only one with the key (but hey, feel free to peek if you’re curious).
+## SEENHUB
 
-좋아하는 음악, 영화, 도서 등을 저장하는 공간입니다 <br/>
-우연히, 별 생각없이 좋은 작품들을 발견했을 때 강한 쾌감을 느낍니다 <br/>
+**나만의 취향을 기록하는 특별한 공간**
 
-#### And More...
-1 이미지 API 적용하기 <br />
-2 드라마 & 애니메이션 페이지 추가 ✔️ <br />
-3 퍼포먼스 점수 높이기 ✔️ <br />
-4 상세정보 페이지 개발 <br />
-5 메인페이지 수정 <br />
-6 카테고리 & 필터링 <br />
-7 권한별 기능 추가하기
+SEENHUB는 음악, 영화, 도서 등 좋아하는 콘텐츠를 기록하고 감상할 수 있는 개인 아카이브입니다. <br />
+자신의 취향을 자유롭게 탐색하고, 인상 깊었던 순간들을 조용히 저장할 수 있는 공간입니다. <br />
+
+### 🚀 Development Progress
+
+* SERIES 페이지 추가 ✔️
+* 퍼포먼스 점수 높이기 ✔️
+* **진행 중:** 이미지 API 적용
+* **계획 중:**
+    * 메인페이지, 상세정보 페이지 수정
+    * 카테고리 & 필터링 기능
+    * 이미지 최적화
+    * 권한별 기능 추가
+    * 로딩 컴포넌트 수정, 무한스크롤 적용
+
+### 🔧 TECH STACK
+
+프로젝트 개발에 사용된 주요 기술 스택은 다음과 같습니다.
+
+* **Frontend:** Next.js, TypeScript, TailwindCSS
+* **Backend:** Next.js API Routes
+* **Database:** MongoDB
+* **State Management:** Zustand
+* **Authentication:** JSON Web Token
+* **External APIs:** LastFM, TMDB, Kakao...
+* **Deployment:** Vercel
