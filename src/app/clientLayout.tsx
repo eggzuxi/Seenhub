@@ -117,7 +117,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         This product uses the TMDB API but is not endorsed or certified by TMDB.
                     </p>
                     <p>
-                        Movie data & images provided by{" "}
+                        Movie, Series data & images provided by{" "}
                         <a
                             href="https://www.themoviedb.org/"
                             target="_blank"
