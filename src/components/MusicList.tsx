@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import {Music} from "../../types/music";
-import Spinner from "@/components/common/Spinner";
 import AlbumArt from "@/components/AlbumArt";
 import Pagination from "@/components/common/Pagination";
 import useUserStore from "../../store/userStore";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import Skeleton from "@/components/common/Skeleton";
 
 interface MusicListProps {
     initialMusic: Music[];
@@ -30,7 +30,7 @@ function MusicList({ initialMusic }: MusicListProps) {
     const modalRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        setLoading(false);
+        setLoading(true);
         fetchMusicList();
     }, []);
 
@@ -80,7 +80,6 @@ function MusicList({ initialMusic }: MusicListProps) {
     };
 
     const fetchMusicList = async () => {
-        setLoading(true);
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL;
             const response = await fetch(`${baseUrl}/api/music`);
@@ -89,10 +88,10 @@ function MusicList({ initialMusic }: MusicListProps) {
             }
             const data = await response.json();
             setMusicList(data);
-            setLoading(false);
         } catch (error) {
             console.error("Error fetching music:", error);
             setError("Failed to fetch music from API");
+        } finally {
             setLoading(false);
         }
     };
@@ -122,14 +121,11 @@ function MusicList({ initialMusic }: MusicListProps) {
                     </button>
                 </Link>
             )}
-            {loading && (
-                <div className="flex justify-center items-center h-40">
-                    <Spinner size={50} color="#3498db"/>
-                </div>
-            )}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && !error && (
+            {loading ? (
+                <Skeleton/>
+            ) : (
                 <>
+                    {error && <p className="text-red-500">{error}</p>}
                     <div className="flex justify-between items-center pb-4">
                         <div className="flex justify-center text-sm">
                             <img className="w-5 h-5 pr-1" src="/images/masterpiece.png" alt="masterpiece"/>
