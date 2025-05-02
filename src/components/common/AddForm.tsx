@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import useUserStore from "../../../store/userStore";
 import { useRouter } from "next/navigation";
 import { searchBook } from "@/app/api/book/kakao";
 import { searchMovie, getMoviePosterUrl } from "@/app/api/movie/tmdb";
+import { searchSeries, getSeriesPosterUrl } from "@/app/api/series/tmdb";
 
 const genreOptions = {
     book: ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Romance", "Fantasy", "SF", "Horror", "Adventure", "Historical Fiction", "Biography", "Autobiography", "Self-Help", "Health & Wellness", "Psychology", "Philosophy", "Science", "Business", "Politics", "Religion & Spirituality", "Cookbook", "Educational"],
@@ -38,9 +39,16 @@ interface MovieSearchResult {
     poster_path: string | null;
 }
 
+interface SeriesSearchResult {
+    id: number;
+    name: string;
+    poster_path: string | null;
+}
+
 function AddForm({ type }: AddItemPageProps) {
     const initialFormState = {
         title: "",
+        name: "",
         author: "",
         artist: "",
         broadcaster: "",
@@ -48,7 +56,7 @@ function AddForm({ type }: AddItemPageProps) {
         genre: [] as string[],
         isMasterPiece: false,
         thumbnail: "",
-        posterPath: "", // 영화 포스터 경로
+        posterPath: "", // 영화, 시리즈 포스터 경로
         ...(type === "music" && { mbid: "" }),
     };
 
@@ -59,6 +67,7 @@ function AddForm({ type }: AddItemPageProps) {
     const router = useRouter();
     const [bookSearchResults, setBookSearchResults] = useState<BookSearchResult[]>([]);
     const [movieSearchResults, setMovieSearchResults] = useState<MovieSearchResult[]>([]);
+    const [seriesSearchResults, setSeriesSearchResults] = useState<SeriesSearchResult[]>([]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -149,7 +158,48 @@ function AddForm({ type }: AddItemPageProps) {
         setMovieSearchResults([]);
     };
 
+    // Series 검색
+    const handleSearchSeries = async () => {
+        if (type === "series" && !formData.name.trim()) {
+            return;
+        }
+        setLoading(true);
+        setSeriesSearchResults([]);
+        setError("");
+
+        try {
+            if (type === "series") {
+                const data = await searchSeries(formData.name);
+                if (data) {
+                    setSeriesSearchResults(data.map(series => ({
+                        id: series.id,
+                        name: series.name,
+                        poster_path: series.poster_path,
+                    })).slice(0, 5));
+                }
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Failed to fetch series");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSelectSeries = (series: SeriesSearchResult) => {
+        setFormData({
+            ...formData,
+            name: series.name,
+            posterPath: series.poster_path || "",
+        });
+        setSeriesSearchResults([]);
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        console.log("handleSubmit 함수가 호출됨!");
         e.preventDefault();
         setLoading(true);
         setError("");
@@ -159,7 +209,8 @@ function AddForm({ type }: AddItemPageProps) {
 
             let requestData: {
                 mbid?: string;
-                title: string;
+                title?: string;
+                name?: string;
                 author?: string;
                 artist?: string;
                 broadcaster?: string;
@@ -173,18 +224,41 @@ function AddForm({ type }: AddItemPageProps) {
             };
 
             if (type === "book") {
-                requestData = { title: formData.title, author: formData.author, genre: formData.genre, thumbnail: formData.thumbnail };
+                requestData = {
+                    title: formData.title,
+                    author: formData.author,
+                    genre: formData.genre,
+                    thumbnail: formData.thumbnail
+                };
             } else if (type === "music") {
-                requestData = { mbid: formData.mbid, title: formData.title, artist: formData.artist, genre: formData.genre };
+                requestData = {
+                    mbid: formData.mbid,
+                    title: formData.title,
+                    artist: formData.artist,
+                    genre: formData.genre
+                };
             } else if (type === "series") {
-                requestData = { title: formData.title, broadcaster: formData.broadcaster, genre: formData.genre };
+                requestData = {
+                    name: formData.name,
+                    broadcaster: formData.broadcaster,
+                    genre: formData.genre,
+                    posterPath: formData.posterPath,
+                };
             } else if (type === "movie") {
-                requestData = { title: formData.title, director: formData.director, genre: formData.genre, posterPath: formData.posterPath };
+                requestData = {
+                    title: formData.title,
+                    director: formData.director,
+                    genre: formData.genre,
+                    posterPath: formData.posterPath
+                };
             }
+
+            console.log("API Request Data:", requestData);
+            console.log("API Endpoint:", apiEndpoints[type]); // 추가된 로그
 
             const response = await fetch(apiEndpoints[type], {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(requestData),
             });
 
@@ -223,17 +297,17 @@ function AddForm({ type }: AddItemPageProps) {
                 <div className="flex space-x-2">
                     <input
                         type="text"
-                        name="title"
-                        placeholder="Title"
-                        value={formData.title}
+                        name={type === "series" ? "name" : "title"} // series는 name 사용
+                        placeholder={type === "series" ? "Name" : "Title"}
+                        value={type === "series" ? formData.name : formData.title}
                         onChange={handleChange}
                         className="w-full p-2 border rounded"
                         required
                     />
-                    {(type === "book" || type === "movie") && (
+                    {(type === "book" || type === "movie" || type === "series") && (
                         <button
                             type="button"
-                            onClick={type === "book" ? handleSearchBook : handleSearchMovie}
+                            onClick={type === "book" ? handleSearchBook : (type === "movie" ? handleSearchMovie : handleSearchSeries)}
                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                             disabled={loading}
                         >
@@ -298,6 +372,37 @@ function AddForm({ type }: AddItemPageProps) {
                                     )}
                                     <div>
                                         <p className="text-black font-medium">{movie.title}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                {/* Series Search Results */}
+                {type === "series" && seriesSearchResults.length > 0 && (
+                    <div className="border p-2 rounded bg-gray-100">
+                        <h2 className="text-lg text-black font-semibold mb-2">Search Results</h2>
+                        <ul className="space-y-2">
+                            {seriesSearchResults.map((series, index) => (
+                                <li
+                                    key={index}
+                                    className="flex items-center space-x-4 cursor-pointer"
+                                    onClick={() => handleSelectSeries(series)}
+                                >
+                                    {series.poster_path ? (
+                                        <img
+                                            src={getSeriesPosterUrl(series.poster_path, "w92")}
+                                            alt={series.name}
+                                            className="w-16 h-auto rounded"
+                                        />
+                                    ) : (
+                                        <div className="w-16 h-16 bg-gray-300 flex items-center justify-center rounded">
+                                            ❌
+                                        </div>
+                                    )}
+                                    <div>
+                                        <p className="text-black font-medium">{series.name}</p>
                                     </div>
                                 </li>
                             ))}

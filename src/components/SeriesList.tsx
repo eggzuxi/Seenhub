@@ -5,7 +5,7 @@ import {Series} from "../../types/series";
 import Spinner from "@/components/common/Spinner";
 import Pagination from "@/components/common/Pagination";
 import useUserStore from "../../store/userStore";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 interface SeriesListProps {
     initialSeries: Series[];
@@ -132,10 +132,19 @@ function SeriesList({ initialSeries }: SeriesListProps) {
                     <ul className="space-y-4">
                         {displayedSeries.map((series, index) => (
                             <li key={index}
-                                className="flex justify-items-start items-center p-4 border border-gray-300 rounded-lg shadow-sm">
-                                <div>
-                                    <p className="font-bold">{series.title}</p>
-                                    <p className="text-gray-600">{series.broadcaster}</p>
+                                className="flex justify-items-start p-4 border border-gray-300 rounded-lg shadow-sm">
+                                <div className="flex items-start space-x-4">
+                                    {series.posterPath && (
+                                        <img
+                                            src={`https://image.tmdb.org/t/p/w92${series.posterPath}`}
+                                            alt={`${series.name} poster`}
+                                            className="w-14 h-auto rounded"
+                                        />
+                                    )}
+                                    <div>
+                                        <p className="font-bold">{series.name}</p>
+                                        <p className="text-gray-600">{series.broadcaster}</p>
+                                    </div>
                                 </div>
                                 <div className="ml-auto">
                                     {!loading && user && (

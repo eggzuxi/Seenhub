@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Music } from "../../../types/music";
 import { Movie } from "../../../types/movie";
@@ -90,15 +90,53 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                 />
             )}
 
-            <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                placeholder="Title"
-                required
-            />
+            {type === "book" && (
+                <input
+                    type="text"
+                    name="title"
+                    value={(formData as Book).title}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Title"
+                    required
+                />
+            )}
+
+            {type === "music" && (
+                <input
+                    type="text"
+                    name="title"
+                    value={(formData as Music).title}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Title"
+                    required
+                />
+            )}
+
+            {type === "series" && (
+                <input
+                    type="text"
+                    name="name"
+                    value={(formData as Series).name}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Name"
+                    required
+                />
+            )}
+
+            {type === "movie" && (
+                <input
+                    type="text"
+                    name="title"
+                    value={(formData as Movie).title}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Title"
+                    required
+                />
+            )}
 
             {type === "book" && (
                 <input

@@ -1,19 +1,31 @@
 import { connectDB } from "../../../../lib/mongodb";
 import { Series } from "../../../../models/Series";
 import { NextResponse } from "next/server";
+import { searchSeries } from "@/app/api/series/tmdb";
 
 // 추가
 export async function POST(req: Request) {
     try {
-        const { title, broadcaster, genre, isMasterPiece } = await req.json();
+        const { name, broadcaster, genre, isMasterPiece } = await req.json();
         await connectDB();
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
 
-        const newSeries = new Series({ title, broadcaster, genre: genreArray, isMasterPiece });
-        await newSeries.save();
-
-        return NextResponse.json(newSeries);
+        const tmdbSeriesResult = await searchSeries(name);
+        if (tmdbSeriesResult && tmdbSeriesResult.length > 0) {
+            const tmdbSeries = tmdbSeriesResult[0];
+            const newSeries = new Series({
+                name: tmdbSeries.name,
+                broadcaster,
+                genre: genreArray,
+                posterPath: tmdbSeries.poster_path,
+                isMasterPiece: isMasterPiece
+            });
+            await newSeries.save();
+            return NextResponse.json({ message: "Series added successfully", series: newSeries }, { status: 201 });
+        } else {
+            return NextResponse.json({ error: "Could not find the series on TMDB" }, { status: 404 });
+        }
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });

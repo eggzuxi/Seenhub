@@ -1,7 +1,8 @@
 export type Series = {
     _id: string;
-    title: string;
+    name: string;
     broadcaster: string;
     genre: string;
+    posterPath: string;
     isMasterPiece: boolean;
 };
