@@ -3,6 +3,8 @@ import React from 'react';
 export default function Skeleton({ itemCount = 5 }) {
     return (
         <div>
+            <div className="h-6 w-32 rounded animate-pulse bg-gray-500/70">
+            </div>
             <div className="mb-4 h-4 rounded animate-pulse">
             </div>
             <ul className="space-y-4">
