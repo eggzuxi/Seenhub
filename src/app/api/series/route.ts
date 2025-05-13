@@ -6,7 +6,7 @@ import { searchSeries } from "@/app/api/series/tmdb";
 // 추가
 export async function POST(req: Request) {
     try {
-        const { name, broadcaster, genre, isMasterPiece } = await req.json();
+        const { name, broadcaster, genre, isMasterPiece, comment } = await req.json();
         await connectDB();
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
@@ -19,7 +19,8 @@ export async function POST(req: Request) {
                 broadcaster,
                 genre: genreArray,
                 posterPath: tmdbSeries.poster_path,
-                isMasterPiece: isMasterPiece
+                isMasterPiece: isMasterPiece,
+                comment: comment,
             });
             await newSeries.save();
             return NextResponse.json({ message: "Series added successfully", series: newSeries }, { status: 201 });

@@ -5,4 +5,5 @@ export type Music = {
     artist: string;
     genre: string;
     isMasterPiece: boolean;
+    comment: string;
 };

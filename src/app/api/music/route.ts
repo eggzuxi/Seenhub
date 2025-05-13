@@ -5,12 +5,12 @@ import {NextResponse} from "next/server";
 // 추가
 export async function POST(req: Request) {
     try {
-        const { mbid, title, artist, genre, isMasterPiece } = await req.json();
+        const { mbid, title, artist, genre, isMasterPiece, comment } = await req.json();
         await connectDB();
 
         const genreArray = Array.isArray(genre) ? genre : [genre];
 
-        const newMusic = new Music({ mbid, title, artist, genre: genreArray, isMasterPiece: isMasterPiece });
+        const newMusic = new Music({ mbid, title, artist, genre: genreArray, isMasterPiece: isMasterPiece, comment });
         await newMusic.save();
 
         return NextResponse.json(newMusic);

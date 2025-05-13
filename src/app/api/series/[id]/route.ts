@@ -34,7 +34,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
 
     const { id } = await params;
-    const { name, broadcaster, genre, isMasterPiece } = await req.json();
+    const { name, broadcaster, genre, isMasterPiece, comment } = await req.json();
 
     try {
         await connectDB();
@@ -43,7 +43,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
             return NextResponse.json({ error: "Invalid ID format." }, { status: 400 });
         }
 
-        const updateData: { name?: string; broadcaster?: string; genre?: string[]; isMasterPiece?: boolean; } = {};
+        const updateData: { name?: string; broadcaster?: string; genre?: string[]; isMasterPiece?: boolean; comment?: string; } = {};
         if (name !== undefined) {
             updateData.name = name;
         }
@@ -56,6 +56,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         }
         if (isMasterPiece !== undefined) {
             updateData.isMasterPiece = isMasterPiece;
+        }
+        if (comment !== undefined) {
+            updateData.comment = comment;
         }
 
         const updatedSeries = await Series.findByIdAndUpdate(

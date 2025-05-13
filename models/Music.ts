@@ -6,6 +6,7 @@ interface MusicDocument extends Document {
     artist: string;
     genre: string[];
     isMasterPiece: boolean;
+    comment: string;
     createdAt: Date;
     delflag: boolean;
 }
@@ -20,6 +21,7 @@ const MusicSchema = new Schema<MusicDocument>({
         enum: ["Pop", "Rock", "Metal", "Electronica", "Hiphop", "Jazz", "Indie", "Classic", "Dance", "J-Pop", "R&B", "Soul", "Ballad"],
     },
     isMasterPiece: { type: Boolean, default: false },
+    comment: { type: String },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });

@@ -25,8 +25,12 @@ function SeriesList({ initialSeries }: SeriesListProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
     const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const toggleComment = (seriesId: string) => {
+        setExpandedId(prev => (prev === seriesId ? null : seriesId));
+    };
 
     useEffect(() => {
         setLoading(false);
@@ -131,9 +135,12 @@ function SeriesList({ initialSeries }: SeriesListProps) {
                 <>
                     <ul className="space-y-4">
                         {displayedSeries.map((series, index) => (
-                            <li key={index}
-                                className="flex justify-items-start p-4 border border-gray-300 rounded-lg shadow-sm">
-                                <div className="flex items-start space-x-4">
+                            <li
+                                key={index}
+                                className="flex flex-col justify-between h-full p-4 border border-gray-300 rounded-lg shadow-sm"
+                                onClick={() => toggleComment(series._id)}
+                            >
+                                <div className="flex items-start justify-between space-x-4">
                                     {series.posterPath && (
                                         <img
                                             src={`https://image.tmdb.org/t/p/w92${series.posterPath}`}
@@ -141,19 +148,32 @@ function SeriesList({ initialSeries }: SeriesListProps) {
                                             className="w-14 h-auto rounded"
                                         />
                                     )}
-                                    <div>
+                                    <div className="flex-grow">
                                         <p className="font-bold">{series.name}</p>
                                         <p className="text-gray-600">{series.broadcaster}</p>
                                     </div>
-                                </div>
-                                <div className="ml-auto">
                                     {!loading && user && (
                                         <button
                                             className="text-gray-500 hover:text-gray-800 font-bold text-xl"
-                                            onClick={(event) => openModal(event, series._id)}
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                openModal(event, series._id);
+                                            }}
                                         >
                                             ⋮
                                         </button>
+                                    )}
+                                </div>
+                                {/* comment: 항상 하단에 위치 */}
+                                <div
+                                    className={`mt-auto overflow-hidden transition-all duration-300 ease-in-out ${
+                                        expandedId === series._id ? "max-h-40 pt-4" : "max-h-0 p-0"
+                                    } text-gray-700 text-sm`}
+                                >
+                                    {expandedId === series._id && (
+                                        <p className="text-gray-500">
+                                            {series.comment || "No comments available."}
+                                        </p>
                                     )}
                                 </div>
                             </li>

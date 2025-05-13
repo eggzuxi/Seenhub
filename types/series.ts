@@ -5,4 +5,5 @@ export type Series = {
     genre: string;
     posterPath: string;
     isMasterPiece: boolean;
+    comment: string;
 };

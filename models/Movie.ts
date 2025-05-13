@@ -6,6 +6,7 @@ interface MovieDocument extends Document {
     genre: string[];
     posterPath: string;
     isMasterPiece: boolean;
+    comment: string;
     createdAt: Date;
     delflag: boolean;
 }
@@ -20,6 +21,7 @@ const MovieSchema = new Schema<MovieDocument>({
     },
     posterPath: { type: String, required: true },
     isMasterPiece: { type: Boolean, default: false },
+    comment: { type: String },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });

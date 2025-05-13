@@ -187,6 +187,16 @@ function EditForm<T extends Book | Music | Series | Movie>({ type, initialData }
                     />
                 </>
             )}
+            <div className="flex items-center gap-3">
+                <input
+                    type="text"
+                    name="comment"
+                    value={formData.comment}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Comment"
+                />
+            </div>
 
             <div className="flex flex-wrap gap-2">
                 {genreOptions[type].map((g) => (

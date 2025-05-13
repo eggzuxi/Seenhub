@@ -5,4 +5,5 @@ export type Book = {
     genre: string;
     thumbnail: string;
     isMasterPiece: boolean;
+    comment: string;
 };

@@ -26,8 +26,12 @@ function MusicList({ initialMusic }: MusicListProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
     const [selectedMusicId, setSelectedMusicId] = useState<string | null>(null);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const toggleComment = (musicId: string) => {
+        setExpandedId(prev => (prev === musicId ? null : musicId));
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -134,36 +138,54 @@ function MusicList({ initialMusic }: MusicListProps) {
                     </div>
                     <ul className="space-y-4">
                         {displayedMusic.map((music, index) => (
-                            <li key={index}
-                                className="flex justify-items-start items-center p-4 border border-gray-300 rounded-lg shadow-sm">
-                                <div className="pr-6">
-                                    <AlbumArt mbid={music.mbid}/>
+                            <li key={index} className="border border-gray-300 rounded-lg shadow-sm">
+                                <div
+                                    className="flex justify-items-start items-center p-4 cursor-pointer"
+                                    onClick={() => toggleComment(music._id)}
+                                >
+                                    <div className="pr-6">
+                                        <AlbumArt mbid={music.mbid} />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold">{music.title}</p>
+                                        <p className="text-gray-600">{music.artist}</p>
+                                    </div>
+                                    <div className="ml-auto flex items-start flex-col">
+                                        {!user && music.isMasterPiece && (
+                                            <img
+                                                src="/images/masterpiece.png"
+                                                alt="Masterpiece"
+                                                className="w-6 h-6"
+                                                style={{
+                                                    width: "50px",
+                                                    height: "40px",
+                                                    marginRight: "-10px",
+                                                    marginTop: "-50px",
+                                                }}
+                                            />
+                                        )}
+                                        {!loading && user && (
+                                            <button
+                                                className="text-gray-500 hover:text-gray-800 font-bold text-xl"
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    openModal(event, music._id);
+                                                }}
+                                            >
+                                                ⋮
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-bold">{music.title}</p>
-                                    <p className="text-gray-600">{music.artist}</p>
-                                </div>
-                                <div className="ml-auto">
-                                    {!user && music.isMasterPiece && (
-                                        <img
-                                            src="/images/masterpiece.png"
-                                            alt="Masterpiece"
-                                            className="w-6 h-6 ml-auto"
-                                            style={{
-                                                width: '50px', // 원하는 크기로 조정
-                                                height: '40px', // 원하는 크기로 조정
-                                                marginRight: '-10px', // 오른쪽으로 살짝 이동시켜 테두리에 걸치게 함 (음수 값)
-                                                marginTop: '-50px', // 위로 살짝 이동시켜 테두리에 걸치게 함 (음수 값)
-                                            }}
-                                        />
-                                    )}
-                                    {!loading && user && (
-                                        <button
-                                            className="font-bold text-xl"
-                                            onClick={(event) => openModal(event, music._id)}
-                                        >
-                                            ⋮
-                                        </button>
+
+                                {/* comment */}
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                        expandedId === music._id ? "max-h-40 p-4" : "max-h-0 p-0"
+                                    } text-gray-700 text-sm`}
+                                >
+                                    {expandedId === music._id && (
+                                        <p className="text-gray-500">{music.comment || "No comments available."}</p>
                                     )}
                                 </div>
                             </li>

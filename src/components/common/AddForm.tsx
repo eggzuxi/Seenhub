@@ -55,6 +55,7 @@ function AddForm({ type }: AddItemPageProps) {
         director: "", // 영화 감독
         genre: [] as string[],
         isMasterPiece: false,
+        comment: "",
         thumbnail: "",
         posterPath: "", // 영화, 시리즈 포스터 경로
         ...(type === "music" && { mbid: "" }),
@@ -216,6 +217,7 @@ function AddForm({ type }: AddItemPageProps) {
                 broadcaster?: string;
                 director?: string;
                 genre: string[];
+                comment?: string;
                 thumbnail?: string;
                 posterPath?: string;
             } = {
@@ -454,6 +456,16 @@ function AddForm({ type }: AddItemPageProps) {
                         required
                     />
                 )}
+                <div className="flex items-center gap-3">
+                    <input
+                        type="text"
+                        name="comment"
+                        placeholder="Comment"
+                        value={formData.comment}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                    />
+                </div>
                 <div className="flex flex-wrap gap-2">
                     {genreOptions[type]?.map((genre) => (
                         <label key={genre} className="flex items-center space-x-2 cursor-pointer">
@@ -467,6 +479,7 @@ function AddForm({ type }: AddItemPageProps) {
                             <span>{genre}</span>
                         </label>
                     ))}
+
                 </div>
                 <div className="flex items-center gap-3">
                     <span className="font-medium">Masterpiece</span>

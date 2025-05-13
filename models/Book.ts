@@ -6,6 +6,7 @@ interface BookDocument extends Document {
     genre: string[];
     thumbnail: string;
     isMasterPiece: boolean;
+    comment: string;
     createdAt: Date;
     delflag: boolean;
 }
@@ -18,6 +19,7 @@ const BookSchema = new Schema<BookDocument>({
     },
     thumbnail: { type: String, required: false },
     isMasterPiece: { type: Boolean, default: false },
+    comment: { type: String },
     createdAt: { type: Date, default: Date.now },
     delflag: { type: Boolean, default: false },
 });
