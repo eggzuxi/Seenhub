@@ -10,7 +10,7 @@ SEENHUB는 음악, 영화, 도서 등 좋아하는 콘텐츠를 기록하고 감
 * SERIES 페이지 추가 ✔️
 * 퍼포먼스 점수 높이기 ✔️
 * 이미지 API 적용 ✔️
-* **진행 중:** 로딩 컴포넌트 수정, 무한스크롤 적용
+* **진행 중:** 로딩 컴포넌트 수정, 무한스크롤 적용, 서버-클라이언트 분리
 * **계획 중:**
     * 메인페이지, 상세정보 페이지 수정
     * 카테고리 & 필터링 기능
@@ -21,9 +21,8 @@ SEENHUB는 음악, 영화, 도서 등 좋아하는 콘텐츠를 기록하고 감
 
 프로젝트 개발에 사용된 주요 기술 스택은 다음과 같습니다.
 
-* **Frontend:** Next.js, TypeScript, TailwindCSS
-* **Backend:** Next.js API Routes
-* **Database:** MongoDB
+* **Framework:** Next.js
+* **Language:** Typescript
 * **State Management:** Zustand
 * **Authentication:** JSON Web Token
 * **External APIs:** LastFM, TMDB, Kakao...
