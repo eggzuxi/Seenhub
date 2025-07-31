@@ -22,16 +22,9 @@ https://www.seenhub.site/
 
 ### 🔧 TECH STACK
 
-프로젝트 개발에 사용된 주요 기술 스택은 다음과 같습니다.
+프로젝트 개발에 사용된 주요 기술 스택은 다음과 같습니다.  
 
-**Framework**  
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=Next.js&logoColor=white)  
-
-**Language**  
-![Typescript](https://img.shields.io/badge/Typescript-3776AB?style=flat&logo=Typescript&logoColor=white)  
-
-**Database**  
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=Next.js&logoColor=white)
+![Typescript](https://img.shields.io/badge/Typescript-3776AB?style=flat&logo=Typescript&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%2347A248?style=flat&logo=MongoDB&logoColor=white)
-
-**Deployment**  
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=Vercel&logoColor=white)
