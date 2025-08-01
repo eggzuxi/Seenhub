@@ -10,9 +10,8 @@ SEENHUB는 음악, 영화, 도서 등 좋아하는 콘텐츠를 기록하고 감
 https://www.seenhub.site/
 
 ### 📊 Traffic
-
-![Analytics](https://juhuibucket.s3.ap-northeast-2.amazonaws.com/analytics.png)  
 ![Traffic](https://juhuibucket.s3.ap-northeast-2.amazonaws.com/traffic.png)  
+![Analytics](https://juhuibucket.s3.ap-northeast-2.amazonaws.com/analytics.png)  
 4월부터 **지속적인 성장세**를 보이며 트래픽이 상승 중입니다.  
 
 ### 🚀 Development Progress
