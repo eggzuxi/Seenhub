@@ -1,9 +1,9 @@
 export type Book = {
     _id: string;
     title: string;
-    author: string;
-    genre: string;
+    authors: string[];
+    publisher: string;
     thumbnail: string;
+    commentId: string;
     isMasterPiece: boolean;
-    comment: string;
 };

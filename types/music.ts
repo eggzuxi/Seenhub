@@ -1,9 +1,8 @@
 export type Music = {
     _id: string;
-    mbid: string;
     title: string;
     artist: string;
-    genre: string;
+    genres: string[];
+    commentId: string;
     isMasterPiece: boolean;
-    comment: string;
 };
