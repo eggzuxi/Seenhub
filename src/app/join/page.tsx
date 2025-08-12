@@ -6,7 +6,7 @@ import AuthGuard from "@/components/common/AuthGuard";
 
 export default function JoinPage() {
     const [formData, setFormData] = useState({
-        id: "",
+        userId: "",
         password: "",
         name: "",
     });
@@ -21,7 +21,7 @@ export default function JoinPage() {
         e.preventDefault();
         setError("");
         try {
-            const res = await fetch("/api/user", {
+            const res = await fetch("/api/user/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -33,7 +33,7 @@ export default function JoinPage() {
             }
 
             alert("Sign up successful");
-            router.push("/");
+            router.push("/login");
         } catch (error) {
             setError(error instanceof Error ? error.message : "Something went wrong");
         }
@@ -47,9 +47,9 @@ export default function JoinPage() {
                     {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
                     <input
                         type="text"
-                        name="id"
+                        name="userId"
                         placeholder="ID"
-                        value={formData.id}
+                        value={formData.userId}
                         onChange={handleChange}
                         className="w-full p-2 border rounded mb-2 font-black"
                         required
