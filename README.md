@@ -32,5 +32,8 @@ https://www.seenhub.site/
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=Next.js&logoColor=white)
 ![Typescript](https://img.shields.io/badge/Typescript-3776AB?style=flat&logo=Typescript&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white)
+![Java](https://img.shields.io/badge/JAVA-0E6D8F?style=flat&logo=java&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%2347A248?style=flat&logo=MongoDB&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=Vercel&logoColor=white)
+![GCP](https://img.shields.io/badge/GCP-4285F4?style=flat&logo=Google%20Cloud&logoColor=white)
