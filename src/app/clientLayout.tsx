@@ -44,7 +44,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     const handleLogout = async () => {
         try {
-            const res = await fetch("/api/user", { method: "DELETE" });
+            const res = await fetch("/api/auth", { method: "DELETE" });
             if (!res.ok) {
                 throw new Error("Logout failed");
             }
@@ -87,7 +87,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <main>{children}</main>
 
             <footer className="flex items-start container p-10 text-sm text-gray-600">
-                <div className="mr-10 pr-10 border-r border-gray-600"> {/* 세로 바 추가 */}
+                <div className="mr-10 pr-10 border-r border-gray-600">
                     <p>seenhub v.1.0</p>
                     <p>
                         Developed by{" "}
@@ -105,13 +105,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <p>
                         Album data & images provided by{" "}
                         <a
-                            href="https://www.last.fm/"
+                            href="https://musicbrainz.org/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"
                         >
-                            Last.fm
+                            MusicBrainz
                         </a>
+                    </p>
+                    <p>
+                        Book data & images provided by <b className="text-blue-500">Kakao</b>
                     </p>
                     <p>
                         This product uses the TMDB API but is not endorsed or certified by TMDB.
