@@ -21,7 +21,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: errorData.message }, { status: res.status })
         }
 
-        return NextResponse.json({ message: "Login successful" });
+        const data = await res.json();
+        return NextResponse.json(data);
 
     } catch (error: unknown) {
 
