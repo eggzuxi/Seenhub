@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/common/Spinner";
 import useUserStore from "../../../store/userStore";
-import {User} from "../../../types/user";
 
 export default function LoginPage() {
     const setUser = useUserStore((state) => state.setUser);
@@ -27,19 +26,20 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
         try {
-            const res = await fetch("/api/user/login", {
+            const res = await fetch("/api/auth", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
 
             const data = await res.json();
+
             if (!res.ok) {
-                throw new Error(data.error || "Login failed");
+                throw new Error(data.error);
             }
 
-            setUser(data.user as User);
-            alert(`Welcome, ${data.user.name}!`);
+            setUser(data);
+            alert(`Welcome, ${data.name}!`);
             router.push("/");
 
         } catch (error) {
@@ -49,7 +49,6 @@ export default function LoginPage() {
 
     return (
         <div className="flex h-screen">
-            (
                 <form className="w-full max-w-md p-10 rounded-lg" onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-4">Login</h2>
                     {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
@@ -73,13 +72,12 @@ export default function LoginPage() {
                     />
                     <button
                         type="submit"
-                        className="w-full p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                        className="w-full p-2 flex items-center justify-center bg-gray-500 text-white rounded hover:bg-gray-600"
                         disabled={loading}
                     >
                         {loading ? <Spinner size={20} color="#3498db"/> : "Login"}
                     </button>
                 </form>
-            )
         </div>
     );
 }
