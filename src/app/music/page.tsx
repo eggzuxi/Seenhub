@@ -1,14 +1,20 @@
 import MusicList from "@/components/MusicList";
 
+const BASE_URL = process.env.NEXT_PUBLIC_LOCAL_URL
+
 async function fetchMusic() {
 
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-        const response = await fetch(`${baseUrl}/api/music`);
+
+        const response = await fetch(`${BASE_URL}/api/music?page=0&size=5`);
         if (!response.ok) {
-            throw new Error(`Failed to fetch music: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch music: ${ response.status } ${ response.statusText }`);
         }
-        return response.json();
+
+        const data = await response.json();
+
+        return data;
+
     } catch (error) {
         console.error("Error fetching music:", error);
         throw new Error("Failed to fetch music from API");
@@ -18,8 +24,8 @@ async function fetchMusic() {
 
 export default async function Page() {
 
-    const musicList = await fetchMusic();
+    const data = await fetchMusic();
 
-    return <MusicList initialMusic={musicList} />
+    return <MusicList initialMusic={data.content} isLastPage={data.last} />
 
 }

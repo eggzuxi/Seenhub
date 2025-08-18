@@ -1,65 +1,85 @@
-import {connectDB} from "../../../../lib/mongodb";
-import {Music} from "../../../../models/Music";
 import {NextResponse} from "next/server";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 추가
 export async function POST(req: Request) {
     try {
-        const { mbid, title, artist, genre, isMasterPiece, comment } = await req.json();
-        await connectDB();
+        const body = await req.json();
 
-        const genreArray = Array.isArray(genre) ? genre : [genre];
+        const res = await fetch(`${BASE_URL}/api/music/add`, {
+            method: "POST",
+            headers: { "Content-Type" : "application/json" },
+            body: JSON.stringify(body)
+        })
 
-        const newMusic = new Music({ mbid, title, artist, genre: genreArray, isMasterPiece: isMasterPiece, comment });
-        await newMusic.save();
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+        }
 
-        return NextResponse.json(newMusic);
+        return NextResponse.json({ message: "Music created successfully" });
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
+
         return NextResponse.json({ error: "Failed to add data." }, { status: 500 });
     }
 }
 
 // 조회
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        await connectDB();
 
-        const music = await Music.find({ delflag: false }).sort({ createdAt: -1 });
-        return NextResponse.json(music);
+        const url = new URL(req.url);
+        const page = url.searchParams.get("page");
+        const size = url.searchParams.get("size");
+
+        const res = await fetch(`${BASE_URL}/api/music/all?page=${page}&size=${size}`);
+
+        if (!res.ok) {
+
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
         return NextResponse.json({ error: "Failed to look up data." }, { status: 500 });
+
     }
 }
 
 // 삭제
-export async function PUT(req: Request) {
+export async function DELETE(req: Request, { params } : { params: { id: string } }) {
 
     try {
-        await connectDB();
 
-        const { id } = await req.json();
-        if (!id) {
-            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
+        const { id } = params;
+
+        const res = await fetch(`${BASE_URL}/api/music/delete/${id}`, {
+            method: "DELETE"
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
 
-        const updatedMusic = await Music.findByIdAndUpdate(
-            id,
-            { delflag: true },
-            { new: true }
-        );
+        return NextResponse.json({ message: "Music has been deleted." });
 
-        if (!updatedMusic) {
-            return NextResponse.json({ error: "Music not found." }, { status: 404 });
-        }
-
-        return NextResponse.json({ message: "Music has been deleted.", movie: updatedMusic });
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }

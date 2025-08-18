@@ -2,25 +2,25 @@
 
 import Link from "next/link";
 import {Music} from "../../types/music";
-import AlbumArt from "@/components/AlbumArt";
-import Pagination from "@/components/common/Pagination";
 import useUserStore from "../../store/userStore";
 import React, {useEffect, useRef, useState} from "react";
 import Skeleton from "@/components/common/Skeleton";
 
 interface MusicListProps {
     initialMusic: Music[];
+    isLastPage: boolean;
 }
 
-function MusicList({ initialMusic }: MusicListProps) {
+function MusicList({ initialMusic, isLastPage: initialIsLastPage }: MusicListProps) {
 
     const user = useUserStore((state) => state.user);
     const setLoading = useUserStore((state) => state.setLoading);
     const loading = useUserStore((state) => state.loading);
+
     const [musicList, setMusicList] = useState<Music[]>(initialMusic);
     const [error, setError] = useState("");
-
-    const [ currentPage, setCurrentPage ] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(initialIsLastPage);
     const itemsPerPage = 5;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -29,28 +29,19 @@ function MusicList({ initialMusic }: MusicListProps) {
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const loaderRef = useRef<HTMLDivElement | null>(null);
+
     const toggleComment = (musicId: string) => {
         setExpandedId(prev => (prev === musicId ? null : musicId));
     };
-
-    useEffect(() => {
-        setLoading(true);
-        fetchMusicList();
-    }, []);
-
-    const totalPages = Math.ceil(musicList.length / itemsPerPage);
-    const displayedMusic = musicList.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     const openModal = (event: React.MouseEvent, musicId: string) => {
         setIsOpen(true);
         setSelectedMusicId(musicId);
         const rect = (event.target as HTMLElement).getBoundingClientRect();
         setModalPosition({
-            x: rect.left - 150, // 버튼 왼쪽으로 약간 이동
-            y: rect.bottom + 5, // 버튼 아래에 여백 추가
+            x: rect.left - 150,
+            y: rect.bottom + 5,
         });
     };
 
@@ -60,20 +51,20 @@ function MusicList({ initialMusic }: MusicListProps) {
         if (!selectedMusicId) return;
 
         try {
-            const response = await fetch(`/api/music`, {
-                method: "PUT", // PUT 요청을 사용
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: selectedMusicId }),
+            const response = await fetch(`/api/music/${selectedMusicId}`, {
+                method: "DELETE"
             });
 
             if (!response.ok) throw new Error("Failed to delete music");
 
             alert("Music successfully deleted");
-            // 삭제된 음악을 목록에서 제거
-            await fetchMusicList();
+
+            setMusicList([]);
+            setCurrentPage(0);
+            setIsLastPage(false);
+            setLoading(true);
             closeModal();
+
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -83,15 +74,15 @@ function MusicList({ initialMusic }: MusicListProps) {
         }
     };
 
-    const fetchMusicList = async () => {
+    const fetchMusicList = async (page: number) => {
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-            const response = await fetch(`${baseUrl}/api/music`);
+            const response = await fetch(`/api/music?page=${page}&size=${itemsPerPage}`);
             if (!response.ok) {
-                throw new Error(`Failed to fetch music: ${response.status} ${response.statusText}`);
+                throw new Error(`Failed to fetch music: ${ response.status } ${ response.statusText }`);
             }
             const data = await response.json();
-            setMusicList(data);
+            setMusicList(prevList => [...prevList, ...data.content]);
+            setIsLastPage(data.last);
         } catch (error) {
             console.error("Error fetching music:", error);
             setError("Failed to fetch music from API");
@@ -99,6 +90,35 @@ function MusicList({ initialMusic }: MusicListProps) {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loading && !isLastPage) {
+                    setCurrentPage(prevPage => prevPage + 1);
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => {
+            if (loaderRef.current) {
+                observer.unobserve(loaderRef.current);
+            }
+        };
+    }, [loading, isLastPage]);
+
+    useEffect(() => {
+
+        if (currentPage > 0 || (currentPage === 0 && initialMusic.length === 0)) {
+            fetchMusicList(currentPage);
+        }
+    }, [currentPage]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -137,14 +157,19 @@ function MusicList({ initialMusic }: MusicListProps) {
                         </div>
                     </div>
                     <ul className="space-y-4">
-                        {displayedMusic.map((music, index) => (
+                        {musicList.map((music, index) => (
                             <li key={index} className="border border-gray-300 rounded-lg shadow-sm">
                                 <div
                                     className="flex justify-items-start items-center p-4 cursor-pointer"
-                                    onClick={() => toggleComment(music._id)}
+                                    onClick={() => toggleComment(music.id)}
                                 >
                                     <div className="pr-6">
-                                        <AlbumArt mbid={music.mbid} />
+                                        {music.thumbnail ? (
+                                            <img src={music.thumbnail} alt={music.title} className="w-20 h-20 object-cover rounded-lg"/>
+                                        ) : (
+                                            <img src="/images/albumart.png" className="w-20 h-20 object-cover rounded-lg"/>
+                                        )}
+
                                     </div>
                                     <div>
                                         <p className="font-bold">{music.title}</p>
@@ -169,7 +194,7 @@ function MusicList({ initialMusic }: MusicListProps) {
                                                 className="text-gray-500 hover:text-gray-800 font-bold text-xl"
                                                 onClick={(event) => {
                                                     event.stopPropagation();
-                                                    openModal(event, music._id);
+                                                    openModal(event, music.id);
                                                 }}
                                             >
                                                 ⋮
@@ -181,17 +206,19 @@ function MusicList({ initialMusic }: MusicListProps) {
                                 {/* comment */}
                                 <div
                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                        expandedId === music._id ? "max-h-40 p-4" : "max-h-0 p-0"
+                                        expandedId === music.id ? "max-h-40 p-4" : "max-h-0 p-0"
                                     } text-gray-700 text-sm`}
                                 >
-                                    {expandedId === music._id && (
-                                        <p className="text-gray-500">{music.comment || "No comments available."}</p>
+                                    {expandedId === music.id && (
+                                        <p className="text-gray-500">{music.commentId || "No comments available."}</p>
                                     )}
                                 </div>
                             </li>
                         ))}
                     </ul>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+                    <div ref={loaderRef} className="flex justify-center my-4">
+                        {loading && <p>Loading more music...</p>}
+                    </div>
                 </>
             )}
 
