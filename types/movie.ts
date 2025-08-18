@@ -1,5 +1,5 @@
 export type Movie = {
-    _id: string;
+    id: string;
     title: string;
     genres: string[];
     rating: number;

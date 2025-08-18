@@ -3,23 +3,24 @@
 import Link from "next/link";
 import {Movie} from "../../types/movie";
 import Spinner from "@/components/common/Spinner";
-import Pagination from "@/components/common/Pagination";
 import useUserStore from "../../store/userStore";
 import React, {useEffect, useRef, useState} from "react";
 
 interface MovieListProps {
     initialMovies: Movie[];
+    isLastPage: boolean;
 }
 
-function MovieList({ initialMovies }: MovieListProps) {
+function MovieList({ initialMovies, isLastPage: initialIsLastPage }: MovieListProps) {
 
     const user = useUserStore((state) => state.user);
     const setLoading = useUserStore((state) => state.setLoading);
     const loading = useUserStore((state) => state.loading);
+
     const [movieList, setMovieList] = useState<Movie[]>(initialMovies);
     const [error, setError] = useState("");
-
-    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ currentPage, setCurrentPage ] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(initialIsLastPage);
     const itemsPerPage = 5;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -28,27 +29,19 @@ function MovieList({ initialMovies }: MovieListProps) {
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const loaderRef = useRef<HTMLDivElement | null>(null);
+
     const toggleComment = (movieId: string) => {
         setExpandedId(prev => (prev === movieId ? null : movieId));
     };
-
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
-    const totalPages = Math.ceil(movieList.length / itemsPerPage);
-    const displayedMovie = movieList.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     const openModal = (event: React.MouseEvent, movieId: string) => {
         setIsOpen(true);
         setSelectedMovieId(movieId);
         const rect = (event.target as HTMLElement).getBoundingClientRect();
         setModalPosition({
-            x: rect.left - 150, // 버튼 왼쪽으로 약간 이동
-            y: rect.bottom + 5, // 버튼 아래에 여백 추가
+            x: rect.left - 150,
+            y: rect.bottom + 5,
         });
     };
 
@@ -58,20 +51,20 @@ function MovieList({ initialMovies }: MovieListProps) {
         if (!selectedMovieId) return;
 
         try {
-            const response = await fetch(`/api/movie`, {
-                method: "PUT", // PUT 요청을 사용
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: selectedMovieId }),
+            const response = await fetch(`/api/movie/${selectedMovieId}`, {
+                method: "DELETE"
             });
 
             if (!response.ok) throw new Error("Failed to delete movie");
 
             alert("Movie successfully deleted");
-            // 삭제된 영화를 목록에서 제거
-            setMovieList((prevMovies) => prevMovies.filter((movie) => movie._id !== selectedMovieId));
+
+            setMovieList([]);
+            setCurrentPage(0);
+            setIsLastPage(false);
+            setLoading(true);
             closeModal();
+
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -80,6 +73,52 @@ function MovieList({ initialMovies }: MovieListProps) {
             }
         }
     };
+
+    const fetchMovieList = async (page: number) => {
+        try {
+            const response = await fetch(`/api/movie?page=${page}&size=${itemsPerPage}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch movie: ${ response.status } ${ response.statusText }`);
+            }
+            const data = await response.json();
+            setMovieList(prevList => [...prevList, ...data.content]);
+            setIsLastPage(data.last);
+        } catch (error) {
+            console.error("Error fetching movie:", error);
+            setError("Failed to fetch movie from API");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loading && !isLastPage) {
+                    setCurrentPage(prevPage => prevPage + 1);
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => {
+            if (loaderRef.current) {
+                observer.unobserve(loaderRef.current);
+            }
+        };
+    }, [loading, isLastPage]);
+
+    useEffect(() => {
+
+        if (currentPage > 0 || (currentPage === 0 && initialMovies.length === 0)) {
+            fetchMovieList(currentPage);
+        }
+    }, [currentPage]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -115,30 +154,28 @@ function MovieList({ initialMovies }: MovieListProps) {
             {!loading && !error && (
                 <>
                     <ul className="space-y-4">
-                        {displayedMovie.map((movie, index) => (
+                        {movieList.map((movie, index) => (
                             <li
                                 key={index}
                                 className="flex flex-col justify-between h-full p-4 border border-gray-300 rounded-lg shadow-sm"
-                                onClick={() => toggleComment(movie._id)}
+                                onClick={() => toggleComment(movie.id)}
                             >
                                 <div className="flex items-start justify-between space-x-4">
-                                    {movie.posterPath && (
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w92${movie.posterPath}`}
-                                            alt={`${movie.title} poster`}
-                                            className="w-14 h-auto rounded"
-                                        />
-                                    )}
+                                    <img
+                                        src={movie.thumbnail}
+                                        alt={movie.title}
+                                        className="w-14 h-auto rounded"
+                                    />
                                     <div className="flex-grow">
                                         <p className="font-bold">{movie.title}</p>
-                                        <p className="text-gray-600">{movie.director}</p>
+                                        <p className="text-gray-600">⭐ {movie.rating}</p>
                                     </div>
                                     {!loading && user && (
                                         <button
                                             className="text-gray-500 hover:text-gray-800 font-bold text-xl"
                                             onClick={(event) => {
                                                 event.stopPropagation();
-                                                openModal(event, movie._id);
+                                                openModal(event, movie.id);
                                             }}
                                         >
                                             ⋮
@@ -148,19 +185,21 @@ function MovieList({ initialMovies }: MovieListProps) {
                                 {/* comment: 항상 하단에 위치 */}
                                 <div
                                     className={`mt-auto overflow-hidden transition-all duration-300 ease-in-out ${
-                                        expandedId === movie._id ? "max-h-40 pt-4" : "max-h-0 p-0"
+                                        expandedId === movie.id ? "max-h-40 pt-4" : "max-h-0 p-0"
                                     } text-gray-700 text-sm`}
                                 >
-                                    {expandedId === movie._id && (
+                                    {expandedId === movie.id && (
                                         <p className="text-gray-500">
-                                            {movie.comment || "No comments available."}
+                                            {movie.commentId || "No comments available."}
                                         </p>
                                     )}
                                 </div>
                             </li>
                         ))}
                     </ul>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+                    <div ref={loaderRef} className="flex justify-center my-4">
+                        {loading && <p>Loading more movie...</p>}
+                    </div>
                 </>
             )}
 

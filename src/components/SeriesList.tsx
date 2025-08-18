@@ -3,23 +3,24 @@
 import Link from "next/link";
 import {Series} from "../../types/series";
 import Spinner from "@/components/common/Spinner";
-import Pagination from "@/components/common/Pagination";
 import useUserStore from "../../store/userStore";
 import React, {useEffect, useRef, useState} from "react";
 
 interface SeriesListProps {
     initialSeries: Series[];
+    isLastPage: boolean;
 }
 
-function SeriesList({ initialSeries }: SeriesListProps) {
+function SeriesList({ initialSeries, isLastPage: initialIsLastPage }: SeriesListProps) {
 
     const user = useUserStore((state) => state.user);
     const setLoading = useUserStore((state) => state.setLoading);
     const loading = useUserStore((state) => state.loading);
+
     const [seriesList, setSeriesList] = useState<Series[]>(initialSeries);
     const [error, setError] = useState("");
-
-    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ currentPage, setCurrentPage ] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(initialIsLastPage);
     const itemsPerPage = 5;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -28,28 +29,19 @@ function SeriesList({ initialSeries }: SeriesListProps) {
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     const modalRef = useRef<HTMLDivElement | null>(null);
+    const loaderRef = useRef<HTMLDivElement | null>(null);
+
     const toggleComment = (seriesId: string) => {
         setExpandedId(prev => (prev === seriesId ? null : seriesId));
     };
-
-    useEffect(() => {
-        setLoading(false);
-        fetchSeriesList();
-    }, []);
-
-    const totalPages = Math.ceil(seriesList.length / itemsPerPage);
-    const displayedSeries = seriesList.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     const openModal = (event: React.MouseEvent, seriesId: string) => {
         setIsOpen(true);
         setSelectedSeriesId(seriesId);
         const rect = (event.target as HTMLElement).getBoundingClientRect();
         setModalPosition({
-            x: rect.left - 150, // 버튼 왼쪽으로 약간 이동
-            y: rect.bottom + 5, // 버튼 아래에 여백 추가
+            x: rect.left - 150,
+            y: rect.bottom + 5,
         });
     };
 
@@ -59,20 +51,20 @@ function SeriesList({ initialSeries }: SeriesListProps) {
         if (!selectedSeriesId) return;
 
         try {
-            const response = await fetch(`/api/series`, {
-                method: "PUT", // PUT 요청을 사용
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: selectedSeriesId }),
+            const response = await fetch(`/api/series/${selectedSeriesId}`, {
+                method: "DELETE"
             });
 
             if (!response.ok) throw new Error("Failed to delete series");
 
             alert("Series successfully deleted");
-            // 삭제된 시리즈를 목록에서 제거
-            await fetchSeriesList();
+
+            setSeriesList([]);
+            setCurrentPage(0);
+            setIsLastPage(false);
+            setLoading(true);
             closeModal();
+
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -82,23 +74,52 @@ function SeriesList({ initialSeries }: SeriesListProps) {
         }
     };
 
-    const fetchSeriesList = async () => {
+    const fetchSeriesList = async (page: number) => {
         setLoading(true);
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-            const response = await fetch(`${baseUrl}/api/series`);
+            const response = await fetch(`/api/series?page=${page}&size=${itemsPerPage}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch series: ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
-            setSeriesList(data);
-            setLoading(false);
+            setSeriesList(prevList => [...prevList, ...data.content]);
+            setIsLastPage(data.last);
         } catch (error) {
             console.error("Error fetching series:", error);
             setError("Failed to fetch series from API");
+        } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loading && !isLastPage) {
+                    setCurrentPage(prevPage => prevPage + 1);
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => {
+            if (loaderRef.current) {
+                observer.unobserve(loaderRef.current);
+            }
+        };
+    }, [loading, isLastPage]);
+
+    useEffect(() => {
+
+        if (currentPage > 0 || (currentPage === 0 && initialSeries.length === 0)) {
+            fetchSeriesList(currentPage);
+        }
+    }, [currentPage]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -134,30 +155,28 @@ function SeriesList({ initialSeries }: SeriesListProps) {
             {!loading && !error && (
                 <>
                     <ul className="space-y-4">
-                        {displayedSeries.map((series, index) => (
+                        {seriesList.map((series, index) => (
                             <li
                                 key={index}
                                 className="flex flex-col justify-between h-full p-4 border border-gray-300 rounded-lg shadow-sm"
-                                onClick={() => toggleComment(series._id)}
+                                onClick={() => toggleComment(series.id)}
                             >
                                 <div className="flex items-start justify-between space-x-4">
-                                    {series.posterPath && (
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w92${series.posterPath}`}
-                                            alt={`${series.name} poster`}
-                                            className="w-14 h-auto rounded"
-                                        />
-                                    )}
+                                    <img
+                                        src={series.thumbnail}
+                                        alt={series.title}
+                                        className="w-14 h-auto rounded"
+                                    />
                                     <div className="flex-grow">
-                                        <p className="font-bold">{series.name}</p>
-                                        <p className="text-gray-600">{series.broadcaster}</p>
+                                        <p className="font-bold">{series.title}</p>
+                                        <p className="text-gray-600">⭐ {series.rating}</p>
                                     </div>
                                     {!loading && user && (
                                         <button
                                             className="text-gray-500 hover:text-gray-800 font-bold text-xl"
                                             onClick={(event) => {
                                                 event.stopPropagation();
-                                                openModal(event, series._id);
+                                                openModal(event, series.id);
                                             }}
                                         >
                                             ⋮
@@ -167,19 +186,21 @@ function SeriesList({ initialSeries }: SeriesListProps) {
                                 {/* comment: 항상 하단에 위치 */}
                                 <div
                                     className={`mt-auto overflow-hidden transition-all duration-300 ease-in-out ${
-                                        expandedId === series._id ? "max-h-40 pt-4" : "max-h-0 p-0"
+                                        expandedId === series.id ? "max-h-40 pt-4" : "max-h-0 p-0"
                                     } text-gray-700 text-sm`}
                                 >
-                                    {expandedId === series._id && (
+                                    {expandedId === series.id && (
                                         <p className="text-gray-500">
-                                            {series.comment || "No comments available."}
+                                            {series.commentId || "No comments available."}
                                         </p>
                                     )}
                                 </div>
                             </li>
                         ))}
                     </ul>
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+                    <div ref={loaderRef} className="flex justify-center my-4">
+                        {loading && <p>Loading more series...</p>}
+                    </div>
                 </>
             )}
 

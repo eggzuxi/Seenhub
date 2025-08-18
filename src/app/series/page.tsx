@@ -1,14 +1,19 @@
 import SeriesList from "@/components/SeriesList";
 
+const BASE_URL = process.env.NEXT_PUBLIC_LOCAL_URL
+
 async function fetchSeries() {
 
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-        const response = await fetch(`${baseUrl}/api/series`);
+
+        const response = await fetch(`${BASE_URL}/api/series?page=0&size=5`);
         if (!response.ok) {
             throw new Error(`Failed to fetch series: ${response.status} ${response.statusText}`);
         }
-        return response.json();
+
+        const data = await response.json();
+        return data;
+
     } catch (error) {
         console.error("Error fetching series:", error);
         throw new Error("Failed to fetch series from API");
@@ -18,8 +23,8 @@ async function fetchSeries() {
 
 export default async function Page() {
 
-    const seriesList = await fetchSeries();
+    const data = await fetchSeries();
 
-    return <SeriesList initialSeries={seriesList} />
+    return <SeriesList initialSeries={data.content} isLastPage={data.last} />
 
 }

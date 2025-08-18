@@ -1,33 +1,28 @@
-import { connectDB } from "../../../../lib/mongodb";
-import { Series } from "../../../../models/Series";
 import { NextResponse } from "next/server";
-import { searchSeries } from "@/app/api/series/tmdb";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 추가
 export async function POST(req: Request) {
     try {
-        const { name, broadcaster, genre, isMasterPiece, comment } = await req.json();
-        await connectDB();
 
-        const genreArray = Array.isArray(genre) ? genre : [genre];
+        const body = await req.json();
 
-        const tmdbSeriesResult = await searchSeries(name);
-        if (tmdbSeriesResult && tmdbSeriesResult.length > 0) {
-            const tmdbSeries = tmdbSeriesResult[0];
-            const newSeries = new Series({
-                name: tmdbSeries.name,
-                broadcaster,
-                genre: genreArray,
-                posterPath: tmdbSeries.poster_path,
-                isMasterPiece: isMasterPiece,
-                comment: comment,
-            });
-            await newSeries.save();
-            return NextResponse.json({ message: "Series added successfully", series: newSeries }, { status: 201 });
-        } else {
-            return NextResponse.json({ error: "Could not find the series on TMDB" }, { status: 404 });
+        const res = await fetch(`${BASE_URL}/api/series/add`, {
+            method: "POST",
+            headers: { "Content-Type" : "application/json" },
+            body: JSON.stringify(body)
+        })
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
+
+        return NextResponse.json({ message: "Series created successfully" });
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
@@ -36,13 +31,27 @@ export async function POST(req: Request) {
 }
 
 // 조회
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        await connectDB();
 
-        const series = await Series.find({ delflag: false }).sort({ createdAt: -1 });
-        return NextResponse.json(series);
+        const url = new URL(req.url);
+        const page = url.searchParams.get("page");
+        const size = url.searchParams.get("size");
+
+        const res = await fetch(`${BASE_URL}/api/series/all?page=${page}&size=${size}`);
+
+        if (!res.ok) {
+
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
@@ -51,27 +60,24 @@ export async function GET() {
 }
 
 // 삭제
-export async function PUT(req: Request) {
+export async function DELETE(req: Request, { params } : { params: { id: string } }) {
     try {
-        await connectDB();
 
-        const { id } = await req.json();
-        if (!id) {
-            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
+        const { id } = params;
+
+        const res = await fetch(`${BASE_URL}/api/series/delete/${id}`, {
+            method: "DELETE"
+        })
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
 
-        const updatedSeries = await Series.findByIdAndUpdate(
-            id,
-            { delflag: true },
-            { new: true }
-        );
+        return NextResponse.json({ message: "Series has been deleted."});
 
-        if (!updatedSeries) {
-            return NextResponse.json({ error: "Series not found." }, { status: 404 });
-        }
-
-        return NextResponse.json({ message: "Series has been deleted.", series: updatedSeries });
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }

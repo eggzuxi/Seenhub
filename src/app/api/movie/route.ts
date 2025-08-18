@@ -1,79 +1,85 @@
-import { connectDB } from "../../../../lib/mongodb";
-import { Movie } from "../../../../models/Movie";
 import { NextResponse } from "next/server";
-import { searchMovie } from "@/app/api/movie/tmdb";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 추가
 export async function POST(req: Request) {
     try {
-        const { title, director, genre, isMasterPiece, comment } = await req.json();
-        await connectDB();
+        const body = await req.json();
 
-        const genreArray = Array.isArray(genre) ? genre : [genre];
+        const res = await fetch(`${BASE_URL}/api/movie/add`, {
+            method: "POST",
+            headers: { "Content-Type" : "application/json" },
+            body: JSON.stringify(body)
+        })
 
-        // TMDB에서 영화 검색 후 Movie 모델에 저장
-        const tmdbMovies = await searchMovie(title);
-        if (tmdbMovies && tmdbMovies.length > 0) {
-            const tmdbMovie = tmdbMovies[0]; // 첫 번째 결과 사용 (필요에 따라 수정)
-            const newMovie = new Movie({
-                title: tmdbMovie.title,
-                director,
-                genre: genreArray,
-                posterPath: tmdbMovie.poster_path, // posterPath 추가
-                isMasterPiece: isMasterPiece,
-                comment: comment,
-            });
-            await newMovie.save();
-            return NextResponse.json(newMovie);
-        } else {
-            return NextResponse.json({ error: "Could not find the movie on TMDB." }, { status: 404 });
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
+
+        return NextResponse.json({ message: "Movie created successfully" });
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
+
         return NextResponse.json({ error: "Failed to add data." }, { status: 500 });
     }
 }
 
 // 조회
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        await connectDB();
 
-        const movies = await Movie.find({ delflag: false }).sort({ createdAt: -1 });
-        return NextResponse.json(movies);
+        const url = new URL(req.url);
+        const page = url.searchParams.get("page");
+        const size = url.searchParams.get("size");
+
+        const res = await fetch(`${BASE_URL}/api/movie/all?page=${page}&size=${size}`);
+
+        if (!res.ok) {
+
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
         return NextResponse.json({ error: "Failed to look up data." }, { status: 500 });
+
     }
 }
 
 // 삭제
-export async function PUT(req: Request) {
+export async function DELETE(req: Request, { params } : { params: { id: string } }) {
 
     try {
-        await connectDB();
 
-        const { id } = await req.json();
-        if (!id) {
-            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
+        const { id } = params;
+
+        const res = await fetch(`${BASE_URL}/api/movie/delete/${id}`, {
+            method: "DELETE"
+        })
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
 
-        const updatedMovie = await Movie.findByIdAndUpdate(
-            id,
-            { delflag: true },
-            { new: true }
-        );
+        return NextResponse.json({ message: "Movie has been deleted."});
 
-        if (!updatedMovie) {
-            return NextResponse.json({ error: "Movie not found." }, { status: 404 });
-        }
-
-        return NextResponse.json({ message: "Movie has been deleted.", movie: updatedMovie });
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }

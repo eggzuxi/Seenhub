@@ -1,14 +1,20 @@
 import MovieList from "@/components/MovieList";
 
+const BASE_URL = process.env.NEXT_PUBLIC_LOCAL_URL
+
 async function fetchMovie() {
 
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-        const response = await fetch(`${baseUrl}/api/movie`);
+
+        const response = await fetch(`${BASE_URL}/api/movie?page=0&size=5`);
         if (!response.ok) {
             throw new Error(`Failed to fetch movies: ${response.status} ${response.statusText}`);
         }
-        return response.json();
+
+        const data = await response.json();
+
+        return data;
+
     } catch (error) {
         console.error("Error fetching movies:", error);
         throw new Error("Failed to fetch movies from API");
@@ -18,8 +24,8 @@ async function fetchMovie() {
 
 export default async function Page() {
 
-    const movieList = await fetchMovie();
+    const data = await fetchMovie();
 
-    return <MovieList initialMovies={movieList} />
+    return <MovieList initialMovies={data.content} isLastPage={data.last} />
 
 }

@@ -1,35 +1,57 @@
-import {connectDB} from "../../../../lib/mongodb";
-import {Book} from "../../../../models/Book";
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 추가
 export async function POST(req: Request) {
     try {
-        const { title, author, genre, isMasterPiece, comment } = await req.json();
-        await connectDB();
+        const body = await req.json();
 
-        const genreArray = Array.isArray(genre) ? genre : [genre];
+        const res = await fetch(`${BASE_URL}/api/book/add`, {
+            method: "POST",
+            headers: { "Content-Type" : "application/json" },
+            body: JSON.stringify(body)
+        })
 
-        const newBook = new Book({ title, author, genre: genreArray, isMasterPiece, comment });
-        await newBook.save();
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+        }
 
-        return NextResponse.json(newBook);
+        return NextResponse.json({ message: "Book created successfully" });
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
+
         return NextResponse.json({ error: "Failed to add data." }, { status: 500 });
     }
 }
 
 // 조회
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        await connectDB();
 
-        const books = await Book.find({ delflag: false }).sort({ createdAt: -1 });
-        return NextResponse.json(books);
+        const url = new URL(req.url);
+        const page = url.searchParams.get("page");
+        const size = url.searchParams.get("size");
+
+        const res = await fetch(`${BASE_URL}/api/book/all?page=${page}&size=${size}`);
+
+        if (!res.ok) {
+
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
+
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
@@ -38,28 +60,25 @@ export async function GET() {
 }
 
 // 삭제
-export async function PUT(req: Request) {
+export async function DELETE(req: Request, { params } : { params: { id: string } }) {
 
     try {
-        await connectDB();
 
-        const { id } = await req.json();
-        if (!id) {
-            return NextResponse.json({ error: "ID not provided." }, { status: 400 });
+        const { id } = params;
+
+        const res = await fetch(`${BASE_URL}/api/book/delete/${id}`, {
+            method: "DELETE"
+        })
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            return NextResponse.json({ error: errorData.message }, { status: res.status });
         }
 
-        const updatedBook = await Book.findByIdAndUpdate(
-            id,
-            { delflag: true },
-            { new: true }
-        );
+        return NextResponse.json({ message: "Book has been deleted."});
 
-        if (!updatedBook) {
-            return NextResponse.json({ error: "Book not found." }, { status: 404 });
-        }
-
-        return NextResponse.json({ message: "Book has been deleted.", book: updatedBook });
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }

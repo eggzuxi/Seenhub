@@ -31,10 +31,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 // 수정
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
+
         const { id } = params;
         const body = await req.json();
 
-        const res = await fetch(`${BASE_URL}/api/book/edit/${id}`, {
+        const res = await fetch(`${BASE_URL}/api/music/edit/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
@@ -51,6 +52,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
-        return NextResponse.json({ error: "Music update failed" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to update music." }, { status: 500 });
     }
 }
