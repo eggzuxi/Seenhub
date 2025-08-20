@@ -2,20 +2,6 @@ import { NextResponse } from "next/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// 조회
-// export async function GET() {
-//     try {
-//
-//         const series = await Series.find({ delflag: false }).sort({ createdAt: -1 });
-        // return NextResponse.json(series);
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             return NextResponse.json({ error: error.message }, { status: 500 });
-//         }
-//         return NextResponse.json({ error: "Failed to look up data." }, { status: 500 });
-//     }
-// }
-
 // 수정
 export async function PATCH(req: Request, context: { params: { id: string } }) {
 
