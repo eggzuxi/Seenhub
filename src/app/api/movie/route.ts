@@ -30,15 +30,24 @@ export async function POST(req: Request) {
     }
 }
 
-// 조회
+// 조회 및 검색
 export async function GET(req: Request) {
     try {
 
         const url = new URL(req.url);
         const page = url.searchParams.get("page");
         const size = url.searchParams.get("size");
+        const query = url.searchParams.get("query");
 
-        const res = await fetch(`${BASE_URL}/api/movie/all?page=${page}&size=${size}`);
+        let apiUrl = '';
+
+        if (query) {
+            apiUrl = `${BASE_URL}/api/movie/search?query=${query}`;
+        } else {
+            apiUrl = `${BASE_URL}/api/movie/all?page=${page}&size=${size}`;
+        }
+
+        const res = await fetch(apiUrl);
 
         if (!res.ok) {
 

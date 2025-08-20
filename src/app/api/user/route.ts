@@ -35,7 +35,7 @@ export async function GET() {
 
     try {
 
-        const res = await fetch(`${BASE_URL}/api/users/all`);
+        const res = await fetch(`${BASE_URL}/api/user/all`);
 
         if (!res.ok) {
 
@@ -53,6 +53,7 @@ export async function GET() {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
         return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 });
+
     }
 
 }
@@ -84,7 +85,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 }
 
-// 계정 삭제 (소프트 삭제 - delFlag 변경)
+// 계정 삭제
 export async function DELETE(req: Request, { params } : { params: { id: string } }) {
     try {
 
@@ -102,9 +103,11 @@ export async function DELETE(req: Request, { params } : { params: { id: string }
         return NextResponse.json({ message: "User has been deleted"});
 
     } catch (error: unknown) {
+
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
         return NextResponse.json({ error: "User delete failed" }, { status: 500 });
+
     }
 }
