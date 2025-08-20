@@ -1,10 +1,12 @@
 import BookList from "@/components/BookList";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function fetchBook() {
 
     try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/book?page=0&size=5`);
+        const response = await fetch(`${BASE_URL}/api/book/all?page=0&size=5`);
         if (!response.ok) {
             throw new Error(`Failed to fetch books: ${response.status} ${response.statusText}`);
         }
