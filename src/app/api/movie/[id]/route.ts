@@ -29,11 +29,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 // }
 
 // 수정
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, context: { params: { id: string } }) {
 
     try {
 
-        const { id } = params;
+        const { id } = context.params;
         const body = await req.json();
 
         const res = await fetch(`${BASE_URL}/api/movie/edit/${id}`, {
