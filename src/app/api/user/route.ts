@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 계정 생성
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
 
@@ -59,9 +59,9 @@ export async function GET() {
 }
 
 // 계정 수정
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: any) {
     try {
-        const { id } = params;
+        const { id } = context.params;
         const body = await req.json();
 
         const res = await fetch(`${BASE_URL}/api/user/edit/${id}`, {
@@ -86,10 +86,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 // 계정 삭제
-export async function DELETE(req: Request, { params } : { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: any) {
     try {
 
-        const { id } = params;
+        const { id } = context.params;
 
         const res = await fetch(`${BASE_URL}/api/user/delete/${id}`, {
             method: "DELETE"

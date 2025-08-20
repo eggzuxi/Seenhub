@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 추가
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
 
         const body = await req.json();
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 }
 
 // 조회 및 검색
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     try {
 
         const url = new URL(req.url);
@@ -69,10 +69,10 @@ export async function GET(req: Request) {
 }
 
 // 삭제
-export async function DELETE(req: Request, { params } : { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: any) {
     try {
 
-        const { id } = params;
+        const { id } = context.params;
 
         const res = await fetch(`${BASE_URL}/api/series/delete/${id}`, {
             method: "DELETE"

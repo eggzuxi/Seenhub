@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 수정
-export async function PATCH(req: Request, context: { params: { id: string } }) {
+export async function PATCH( req: NextRequest, context: any ) {
 
     try {
 
