@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {Music} from "../../types/music";
 import useUserStore from "../../store/userStore";
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Skeleton from "@/components/common/Skeleton";
 
 interface MusicListProps {
@@ -74,14 +74,20 @@ function MusicList({ initialMusic, isLastPage: initialIsLastPage }: MusicListPro
         }
     };
 
-    const fetchMusicList = async (page: number) => {
+    const fetchMusicList = useCallback(async (page: number) => {
+        setLoading(true);
         try {
             const response = await fetch(`/api/music?page=${page}&size=${itemsPerPage}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch music: ${ response.status } ${ response.statusText }`);
             }
             const data = await response.json();
-            setMusicList(prevList => [...prevList, ...data.content]);
+            setMusicList(prevList => {
+                const newItems = data.content.filter(
+                    (item: Music) => !prevList.some(prev => prev.id === item.id)
+                );
+                return [...prevList, ...newItems];
+            });
             setIsLastPage(data.last);
         } catch (error) {
             console.error("Error fetching music:", error);
@@ -89,7 +95,7 @@ function MusicList({ initialMusic, isLastPage: initialIsLastPage }: MusicListPro
         } finally {
             setLoading(false);
         }
-    };
+    }, [setMusicList, setIsLastPage, setLoading, itemsPerPage]);
 
     useEffect(() => {
 
@@ -115,10 +121,10 @@ function MusicList({ initialMusic, isLastPage: initialIsLastPage }: MusicListPro
 
     useEffect(() => {
 
-        if (currentPage > 0 || (currentPage === 0 && initialMusic.length === 0)) {
+        if (currentPage >= 0 || (currentPage === 0 && initialMusic.length === 0)) {
             fetchMusicList(currentPage);
         }
-    }, [currentPage]);
+    }, [currentPage, fetchMusicList, initialMusic.length]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
