@@ -1,12 +1,10 @@
 import SeriesList from "@/components/SeriesList";
 
-const BASE_URL = process.env.NEXT_PUBLIC_LOCAL_URL
-
 async function fetchSeries() {
 
     try {
 
-        const response = await fetch(`${BASE_URL}/api/series?page=0&size=5`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/series?page=0&size=5`);
         if (!response.ok) {
             throw new Error(`Failed to fetch series: ${response.status} ${response.statusText}`);
         }

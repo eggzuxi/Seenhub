@@ -1,12 +1,10 @@
 import MusicList from "@/components/MusicList";
 
-const BASE_URL = process.env.NEXT_PUBLIC_LOCAL_URL
-
 async function fetchMusic() {
 
     try {
 
-        const response = await fetch(`${BASE_URL}/api/music?page=0&size=5`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/music?page=0&size=5`);
         if (!response.ok) {
             throw new Error(`Failed to fetch music: ${ response.status } ${ response.statusText }`);
         }
