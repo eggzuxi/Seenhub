@@ -20,7 +20,8 @@ https://www.seenhub.site/
 * SERIES 페이지 추가 ✔️
 * 퍼포먼스 점수 높이기 ✔️
 * 이미지 API 적용 ✔️
-* **진행 중:** 로딩 컴포넌트 수정, 무한스크롤 적용, 서버-클라이언트 분리
+* 서버-클라이언트 분리 ✔️
+* **진행 중:** 로딩 컴포넌트 수정, 무한스크롤 적용
 * **계획 중:**
     * 메인페이지, 상세정보 페이지 수정
     * 카테고리 & 필터링 기능
@@ -36,4 +37,6 @@ https://www.seenhub.site/
 ![Java](https://img.shields.io/badge/JAVA-0E6D8F?style=flat&logo=java&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%2347A248?style=flat&logo=MongoDB&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=Vercel&logoColor=white)
+![Github Actions](https://img.shields.io/badge/Github%20Actions-2088FF?style=flat&logo=Github%20Actions&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=flat&logo=Docker&logoColor=white)
 ![GCP](https://img.shields.io/badge/GCP-4285F4?style=flat&logo=Google%20Cloud&logoColor=white)
