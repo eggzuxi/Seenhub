@@ -2,6 +2,8 @@ import MovieList from "@/components/MovieList";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
+export const dynamic = "force-dynamic";
+
 async function fetchMovie() {
 
     try {
